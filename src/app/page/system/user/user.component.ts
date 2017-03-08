@@ -19,15 +19,112 @@ export class UserComponent implements OnInit {
    */
   toast: ToastEntity = new ToastEntity;
   /**
-   * 搜索条件
-   * @type {string}
-   */
-  key: string = '';
-  /**
    * 用户列表对象
    * @type {{}}
    */
-  userList: any = {};
+  userList: any = {
+    total: 20, rows: [
+      {
+        id: 1,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 2,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 3,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 4,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 5,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 6,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 7,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 8,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 9,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 10,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+      {
+        id: 11,
+        name: '张三',
+        account: 'zhangsan',
+        mobile: 13800138000,
+        email: '13800138000@126.com',
+        address: '浙江省杭州市滨江区九堡',
+        sex: '男'
+      },
+    ]
+  };
   /**
    * 分页对象
    * @type {{page: number; total: number; limit: number; perPage: number}}
@@ -58,50 +155,34 @@ export class UserComponent implements OnInit {
    * @type {string}
    */
   confirmType: string = '';
-
-  /**
-   * 角色集合
-   * @type {Array}
-   */
-  roleDataList: Array<any> = [];
-
+  
   constructor(private userService: UserService, private cdr: ChangeDetectorRef) {
   }
-
-  ngOnInit(): void {
-    this.getUserList(null, this.key);
-    this.getRoleDataList();
-  }
-
+  
   /**
-   * 查询用户列表
-   * @param page
-   * @param key
+   * 页面初始化加载
    */
-  getUserList(page: any, key: string) {
-    this.userService.getUserList(page, key).subscribe(res=> {
-      this.userList = res.json();
-    });
+  ngOnInit(): void {
   }
-
+  
+  
   /**
    * 条件搜索
    * @param event
    */
-  searchByCondition(event) {
-    this.key = event;
-    this.getUserList(this.pageOpts, event);
+  searchByCondition(data: string) {
+    this.toastFunction("搜索关键字为:" + data, 'info');
   }
-
+  
   /**
    * 分页
    * @param event
    */
-  pageChange(event) {
-    this.pageOpts.page = event;
-    this.getUserList(this.pageOpts, this.key);
+  pageChange(data: number) {
+    this.pageOpts.page = data;
+    this.toastFunction('这是第' + data + '页', 'info');
   }
-
+  
   /**
    * 打开创建用户modal
    */
@@ -109,59 +190,37 @@ export class UserComponent implements OnInit {
     this.opened = !this.opened;
     this.operaObj = {};
   }
-
+  
   /**
    * 创建用户模态取消事件
    */
   cancel() {
     this.opened = !this.opened;
   }
-
+  
   /**
    * 保存用户
    */
   saveUser() {
-    this.userService.saveUser(this.operaObj).subscribe(res=> {
-      let result = res.json();
-      if (result.success) {
-        this.toastFunction('保存成功', 'success');
-        this.opened = !this.opened;
-      } else {
-        this.toastFunction(result.message, 'error');
-      }
-    });
+    this.opened = !this.opened;
+    this.toastFunction('保存用户操作', 'info');
   }
-
-  /**
-   * 密码重置
-   * @param data
-   */
-  reset(data: any) {
-    this.operaObj = data;
-    this.prompt.notificationOpen = !this.prompt.notificationOpen;
-    this.prompt.promptMessage = '您确定要重置密码吗?';
-    this.confirmType = 'reset';
-  }
-
+  
   /**
    * prompt取消事件
    */
   cancelPrompt() {
     this.prompt.notificationOpen = !this.prompt.notificationOpen;
   }
-
+  
   /**
    * prompt确定事件
    */
   confirm() {
-    if (this.confirmType == 'delete') {
-      this.confirmDelete();
-    }
-    if (this.confirmType == 'reset') {
-      this.confirmReset();
-    }
+    this.prompt.notificationOpen = !this.prompt.notificationOpen;
+    this.toastFunction('进行删除操作', 'info');
   }
-
+  
   /**
    * toast传递事件
    * @param event
@@ -169,7 +228,7 @@ export class UserComponent implements OnInit {
   notifyParamFunction(event: boolean) {
     this.toast.showAlert = event;
   }
-
+  
   /**
    * 删除用户
    * @param data
@@ -180,41 +239,8 @@ export class UserComponent implements OnInit {
     this.confirmType = 'delete';
     this.operaObj = data;
   }
-
-
-  /**
-   * 确认删除
-   */
-  confirmDelete() {
-    this.userService.deleteUser(this.operaObj).subscribe(res=> {
-      let ret = res.json();
-      if (ret.success) {
-        this.toastFunction('删除成功', 'success');
-        this.prompt.notificationOpen = !this.prompt.notificationOpen;
-        this.getUserList(null, this.pageOpts);
-      } else {
-        this.toastFunction(ret.message, 'error');
-        this.prompt.notificationOpen = !this.prompt.notificationOpen;
-      }
-    });
-  }
-
-  /**
-   * 确认重置密码
-   */
-  confirmReset() {
-    this.userService.resetPassword(this.operaObj).subscribe(res=> {
-      let ret = res.json();
-      if (ret.success) {
-        this.toastFunction('密码重置成功', 'success');
-        this.prompt.notificationOpen = !this.prompt.notificationOpen;
-      } else {
-        this.toastFunction(ret.message, 'error');
-        this.prompt.notificationOpen = !this.prompt.notificationOpen;
-      }
-    });
-  }
-
+  
+  
   /**
    * 编辑用户信息
    * @param data
@@ -223,8 +249,8 @@ export class UserComponent implements OnInit {
     this.operaObj = data;
     this.opened = !this.opened;
   }
-
-
+  
+  
   /**
    * toast函数
    * @param message
@@ -235,14 +261,5 @@ export class UserComponent implements OnInit {
     this.toast.toastMessage = message;
     this.toast.toastType = toastType;
   }
-
-  /**
-   * 查询角色集合
-   */
-  getRoleDataList() {
-    this.userService.getRoleList().subscribe(res=> {
-      this.roleDataList = res.json().body;
-    });
-  }
-
+  
 }

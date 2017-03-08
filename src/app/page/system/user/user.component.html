@@ -25,11 +25,11 @@
     </ngl-datatable-column>
     <ngl-datatable-column heading="手机" key="mobile" cellClass="slds-truncate"></ngl-datatable-column>
     <ngl-datatable-column heading="邮箱" key="email" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="地址" key="address" cellClass="slds-truncate"></ngl-datatable-column>
     <ngl-datatable-column heading="性别" key="sex" cellClass="slds-truncate"></ngl-datatable-column>
     <ngl-datatable-column heading="操作" key="">
         <template nglDatatableCell let-row="row">
             <div class="slds-button-group" role="group">
-                <button class="slds-button slds-button--neutral" (click)="reset(row)">密码重置</button>
                 <button class="slds-button slds-button--brand" (click)="edit(row)">编辑</button>
                 <button class="slds-button slds-button--destructive" (click)="deleteUser(row)">删除</button>
             </div>

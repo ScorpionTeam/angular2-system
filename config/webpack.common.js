@@ -23,7 +23,7 @@ const ngcWebpack = require('ngc-webpack');
 const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
-    title: '花啦生活管理系统',
+    title: 'angular2-system',
     baseUrl: '/',
     isDevServer: helpers.isWebpackDevServer()
 };
