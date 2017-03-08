@@ -1,0 +1,6 @@
+<div class="slds-notify_container">
+    <ngl-notification *ngIf="showAlert" type="toast" [severity]="toastType" (nglNotificationClose)="onClose()"
+                      [timeout]="timeOut" class="slds-theme--alert-texture">
+        <h2>{{toastMessage}}</h2>
+    </ngl-notification>
+</div>

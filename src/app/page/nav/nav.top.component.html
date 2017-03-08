@@ -1,0 +1,67 @@
+<!--头部导航栏-->
+<nav class="navbar navbar-dark navbar-fixed-top" style="border-radius: 0;background: #3f4e62">
+    <a class="navbar-brand" href="#"><i class="fa fa-2x fa-skyatlas" aria-hidden="true"></i></a>
+    <ul class="nav navbar-nav pull-right">
+        <li class="nav-item active">
+            <a href="#" class="nav-link">
+                <ngl-avatar size="small" type="circle"
+                            src="http://ng-lightning.github.io/ng-lightning/assets/images/avatar1.jpg"
+                            alt="avatar 2"></ngl-avatar>
+            </a>
+        </li>
+        <li class="nav-item active">
+          <span nglDropdown [(open)]="dropdownOpen">
+            <a class="nav-link dropdown-toggle" href="javascript:void(0);" nglDropdownTrigger>
+              <i class="fa fa-location-arrow"></i>
+              <span>{{selectedCity}}</span>
+            </a>
+            <div class="slds-dropdown slds-dropdown--left">
+              <ul class="dropdown__list" role="menu">
+                <li class="slds-dropdown__item" *ngFor="let city of cities">
+                  <a role="menuitem" nglDropdownItem (click)="selectCity(city)">
+                    <p class="slds-truncate">{{city.name}}</p>
+                      <!--<ngl-icon [icon]="item.icon" type="default" size="x-small"></ngl-icon>-->
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </span>
+        </li>
+        <li class="nav-item active dropdown">
+            <a [nglPopover]="tip" (click)="settingChange('bottom')" class="nav-link dropdown-toggle" [nglPopover]="tip"
+               [nglPopoverPlacement]="placement" [nglOpen]="settingOpen"><i class="fa fa-gear"></i></a>
+            <template #tip>
+                <ul class="setting-tip">
+                    <li (click)="openModifyPassword()">修改密码</li>
+                    <li (click)="logout()">退出</li>
+                </ul>
+            </template>
+        </li>
+    </ul>
+</nav>
+
+<!--修改密码模态-->
+<ngl-modal header="修改密码" [(open)]="opened" class="small-modal">
+    <div body>
+        <ngl-form-element label="原始密码" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="passwordObj.oldPassword">
+        </ngl-form-element>
+        <ngl-form-element label="新密码" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="passwordObj.newPassword">
+        </ngl-form-element>
+        <ngl-form-element label="确认密码" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="passwordObj.confirmPassword">
+        </ngl-form-element>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="cancel()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="updatePassword()">保存</button>
+    </template>
+</ngl-modal>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="promptMessage" [isOpen]="notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toastType" [toastMessage]="toastMessage"
+                 [showAlert]="showAlert"></toast-component>

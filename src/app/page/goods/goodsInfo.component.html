@@ -1,0 +1,58 @@
+<div class="slds-form--horizontal">
+  <div class="slds-form-element">
+    <label for="input_1" class="slds-form-element__label">商品类目:</label>
+    <div class="slds-form-element__control">
+      <input type="text" id="input_1" class="slds-input slds-text-color--error"
+             placeholder="商品类目" [(ngModel)]="goodsInfo.cname" disabled>
+    </div>
+  </div>
+  <div class="slds-form-element">
+    <label for="input_2" class="slds-form-element__label">商品名称:</label>
+    <div class="slds-form-element__control">
+      <input type="text" id="input_2" class="slds-input" placeholder="商品名称" [(ngModel)]="goodsInfo.title">
+    </div>
+  </div>
+  <div class="slds-form-element">
+    <label for="input_6" class="slds-form-element__label">货号:</label>
+    <div class="slds-form-element__control">
+      <input type="text" id="input_6" class="slds-input" placeholder="货号" [(ngModel)]="goodsInfo.goodsSn">
+    </div>
+  </div>
+  <div class="slds-form-element">
+    <label class="slds-form-element__label">商品主图:</label>
+    <div class="slds-form-element__control">
+      <div class="slds-size--1-of-2">
+        <img-upload-component (uploadAddr)="goodsInfo.picUrl=$event;printResult($event)"
+                              [picUrl]="goodsInfo.picUrl"
+                              uploadFolder="goods"></img-upload-component>
+      </div>
+    </div>
+  </div>
+  <div class="slds-form-element">
+    <label for="input_4" class="slds-form-element__label">进货价:</label>
+    <div class="slds-form-element__control">
+      <input type="text" id="input_4" class="slds-input" placeholder="进货价" [(ngModel)]="goodsInfo.recPrice">
+    </div>
+  </div>
+  <div class="slds-form-element">
+    <label for="input_5" class="slds-form-element__label">销售价:</label>
+    <div class="slds-form-element__control">
+      <input type="text" id="input_5" class="slds-input" placeholder="销售价" [(ngModel)]="goodsInfo.salePrice">
+    </div>
+  </div>
+  <div class="slds-form-element">
+    <label class="slds-form-element__label">详细图片:</label>
+    <div class="slds-form-element__control slds-clearfix">
+      <div class="slds-size--1-of-2 slds-float--left">
+        <img-upload-component (uploadAddr)="goodsInfo.picDescription[0]=$event"
+                              [picUrl]="goodsInfo.picDescription[0]"
+                              uploadFolder="goods"></img-upload-component>
+      </div>
+      <div class="slds-size--1-of-2 slds-float--left">
+        <img-upload-component (uploadAddr)="goodsInfo.picDescription[1]=$event"
+                              [picUrl]="goodsInfo.picDescription[1]"
+                              uploadFolder="goods"></img-upload-component>
+      </div>
+    </div>
+  </div>
+</div>

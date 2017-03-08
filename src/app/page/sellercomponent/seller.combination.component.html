@@ -1,0 +1,150 @@
+<div class="slds-page-header">
+    <div class="slds-grid">
+        <div class="slds-col slds-has-flexi-truncate">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <a>
+                        <img [src]="currentSeller.qrcodUrl" style="width: 80px;height: 80px;" alt="二维码"
+                             (click)="openImg($event)">
+                    </a>
+                </div>
+                <div class="slds-media__figure">
+                    <a>
+                        <img [src]="currentSeller.scanUrl" style="width: 80px;height: 80px;" alt="扫码"
+                             (click)="openImg($event)">
+                    </a>
+                </div>
+                <div class="slds-media__figure">
+                    <a><img [src]="commonsUrls+currentSeller.idCardImg" style="width: 80px;height: 80px;" alt="身份证"
+                            (click)="openImg($event)"></a>
+
+                </div>
+                <div class="slds-media__figure">
+                    <a>
+                        <img [src]="commonsUrls+currentSeller.businesslicenseimg" style="width: 80px;height: 80px;"
+                             alt="营业执照" (click)="openImg($event)">
+                    </a>
+                </div>
+                <div class="slds-media__figure">
+                    <a>
+                        <img [src]="commonsUrls+currentSeller.goodsShelfUrl" style="width: 80px;height: 80px;" alt="货架"
+                             (click)="openImg($event)">
+                    </a>
+                </div>
+                <div class="slds-media__figure">
+                    <a>
+                        <img [src]="commonsUrls+currentSeller.imgUrl" style="width: 80px;height: 80px;" alt="店铺"
+                             (click)="openImg($event)">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="slds-grid slds-wrap">
+    <div class="slds-size--5-of-12">
+        <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap">
+            <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                <div class="slds-panel__section">
+                    <h3 class="slds-text-heading--small slds-m-bottom--medium">基本信息</h3>
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+                        <span class="slds-form-element__label">店铺名称</span>
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static text-danger"><b>{{currentSeller.name}}</b></span>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+                        <span class="slds-form-element__label">重复信息</span>
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static slds-text-longform">{{repeatInfo}}</span>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+                        <span class="slds-form-element__label">联系方式</span>
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static text-success">{{currentSeller.phone}}</span>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+                        <span class="slds-form-element__label">店铺地址</span>
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static text-danger">{{currentSeller.address}}</span>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+                        <span class="slds-form-element__label">营业时间</span>
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">{{currentSeller.openTime}}--{{currentSeller.endTime}}</span>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+                        <span class="slds-form-element__label">审核时间</span>
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">{{currentSeller.enterTime}}</span>
+                        </div>
+                    </div>
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+                        <span class="slds-form-element__label">经纬度</span>
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">{{currentSeller.lng}}|{{currentSeller.lat}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--2-of-12"></div>
+    <div class="slds-size--5-of-12">
+        <div class="slds-panel slds-grid slds-grid--vertical slds-nowrap">
+            <div class="slds-form--stacked slds-grow slds-scrollable--y">
+                <div class="slds-panel__section">
+                    <h3 class="slds-text-heading--small slds-m-bottom--medium">附加信息</h3>
+                    <div class="slds-form-element slds-hint-parent slds-has-divider--bottom"
+                         *ngFor="let ext of sellerExt.rows">
+                        <button class="slds-button slds-button--icon slds-button--icon-small slds-float--right" *ngIf="showBtn"
+                                title="Remove" (click)="editExt(ext)">
+                            <svg class="slds-button__icon slds-button__icon--hint" aria-hidden="true">
+                                <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#edit"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Remove</span>
+                        </button>
+                        <span class="slds-form-element__label">{{ext.dataDesc}}</span>
+                        <div class="slds-form-element__control">
+                            <span class="slds-form-element__static">{{ext.dataValue}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--扩展信息编辑模态-->
+<ngl-modal [(open)]="editOpened">
+    <div body>
+        <div class="slds-media slds-comment slds-hint-parent">
+            <label class="slds-form-element__label">{{operaExtObj.dataDesc}}</label>
+            <div class="slds-media__body">
+                <div class="slds-publisher slds-publisher--discussion">
+                    <textarea id="comment-text-input2" class="slds-publisher__input slds-textarea slds-text-longform"
+                              [(ngModel)]="operaExtObj.dataValue"></textarea>
+                    <div class="slds-publisher__actions slds-grid slds-grid--align-spread">
+                        <button class="slds-button slds-button--brand" (click)="saveExt()">save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ngl-modal>
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>
+
+<!--图片模态-->
+<ngl-modal size="small" [(open)]="imgOpened" size="small">
+    <div body class="slds-align--absolute-center">
+        <img [src]="imgSources" style="width: 200px;height: 200px;">
+    </div>
+</ngl-modal>
+

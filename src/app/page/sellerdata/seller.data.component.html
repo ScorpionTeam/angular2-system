@@ -1,0 +1,135 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-p-horizontal--small slds-large-size--2-of-12">
+        <a [nglPopover]="tip" nglPopoverPlacement="bottom" [nglOpen]="open"
+           (mouseenter)="open = true" (mouseleave)="open = false" class="text-info"><i
+                class="fa fa-info-circle"></i><span>信息</span></a>
+    </div>
+
+    <div class="slds-p-horizontal--small slds-large-size--2-of-12">
+        <div class="slds-form-element">
+            <div class="slds-form-element__control">
+                <start-time-component (_startTime)="receiveDate($event)"
+                                      [_date_format]="_date_formate"></start-time-component>
+            </div>
+        </div>
+    </div>
+    <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+        <ngl-form-checkbox label="测试店铺" class="slds-m-top--small">
+            <input nglFormControl type="checkbox" [ngModel]="testSeller"/>
+        </ngl-form-checkbox>
+    </div>
+    <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+        <ngl-form-checkbox label="下线店铺" class="slds-m-top--small">
+            <input nglFormControl type="checkbox" [(ngModel)]="outLineSeller"/>
+        </ngl-form-checkbox>
+    </div>
+    <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+        <button class="slds-button slds-button--neutral" (click)="querySellerDataByBtn()">查询</button>
+    </div>
+    <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+        <button class="slds-button slds-button--neutral" (click)="exportExcel()">导出Excel</button>
+    </div>
+</div>
+<!--店铺列表-->
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="sellerDataList.rows" trackByKey="rank"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="商户id" key="sellerId"></ngl-datatable-column>
+        <ngl-datatable-column heading="商户名" key="sellerName">
+            <template nglDatatableCell let-value>
+                <b>
+                    {{value}}
+                </b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="业务员" key="clerk"></ngl-datatable-column>
+        <ngl-datatable-column heading="电话" key="phone">
+            <template nglDatatableCell let-value>
+                <ngl-badge type="info">
+                    {{value}}
+                </ngl-badge>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="城市" key="city"></ngl-datatable-column>
+        <ngl-datatable-column heading="区域" key="area"></ngl-datatable-column>
+        <ngl-datatable-column heading="地址" key="address">
+            <template nglDatatableCell let-value>
+                <span class="text-danger">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="上线时间" key="onlineDate">
+            <template nglDatatableCell let-value>
+                {{value|date:'yyyy-MM-dd HH:mm'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="开单时间" key="billingDate">
+            <template nglDatatableCell let-value>
+                {{value|date:'yyyy-MM-dd HH:mm'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="最后下单时间" key="lastOrderDate">
+            <template nglDatatableCell let-value>
+                {{value|date:'yyyy-MM-dd HH:mm'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="新用户订单量" key="firstOrderDate">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="总订单量" key="totalOrderCount">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="销售额" key="saleAmount">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="店铺累计访问人数" key="visitCount">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="注册用户数" key="registerCount">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="奖励金额" key="rewardAmount">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="红包金额" key="redPackageAmount">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="sellerDataList.total" [perPage]="pageOpts.size"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+<!--tips-->
+<template #tip>
+    <div class="slds-text-title--caps">报表参数详解</div>
+    <div class="slds-text-longform">
+        <ul>
+            <li>上线时间:店铺通过审核(非物料审核)的时间</li>
+            <li>开单时间:店铺上线后第一笔订单完成的时间</li>
+            <li>最后下单时间:距离现在,最后一笔在该店完成的交易</li>
+            <li>红包金额:当日该店完成订单中所有不含配送费的优惠金额总和</li>
+            <li>奖励金额:指当日向该店发出的所有奖励金额,不扣除冲账</li>
+            <li>商家基本信息栏:数据为店铺属性,不根据筛选时间的改变而变化</li>
+            <li>商户业务信息、商户消耗成本栏：除“店铺累计访问人数”为累计数据，其余数据皆为当日数据</li>
+        </ul>
+    </div>
+</template>

@@ -1,0 +1,151 @@
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    申请商品金额:{{refundGoodsAmount/100|number:'1.2-2'}}
+</div>
+<table ngl-datatable [data]="refundGoodsDataList">
+    <ngl-datatable-column heading="商品名称" key="goodsName"></ngl-datatable-column>
+    <ngl-datatable-column heading="供应商名称" key="supplierName"></ngl-datatable-column>
+    <ngl-datatable-column heading="原价" key="recPrice">
+        <template nglDatatableCell let-value>
+            <span class="text-danger">{{value/100|number:'1.2-2'}}</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="销售价格" key="salePrice">
+        <template nglDatatableCell let-value>
+            <span class="text-success">{{value/100|number:'1.2-2'}}</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="商品数量" key="goodsNumber"></ngl-datatable-column>
+    <ngl-datatable-column heading="状态" key="orderGoodsStatusStr"></ngl-datatable-column>
+    <!-- No rows overlay -->
+    <template nglNoRowsOverlay>暂无数据!</template>
+</table>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    退款单
+</div>
+<table class="slds-table slds-table--bordered slds-table--cell-buffer">
+    <thead>
+    <tr class="slds-text-title--caps">
+        <th scope="col">
+            <div class="slds-truncate">退款单编号</div>
+        </th>
+        <th scope="col">
+            <div class="slds-truncate">订单编码</div>
+        </th>
+        <th scope="col">
+            <div class="slds-truncate">生成时间</div>
+        </th>
+        <th scope="col">
+            <div class="slds-truncate">申请金额</div>
+        </th>
+        <th scope="col">
+            <div class="slds-truncate">运费申请金额</div>
+        </th>
+        <th scope="col">
+            <div class="slds-truncate">状态</div>
+        </th>
+        <th scope="col">
+            <div class="slds-truncate">实际退款金额</div>
+        </th>
+        <th scope="col">
+            <div class="slds-truncate">运营确认时间</div>
+        </th>
+        <th scope="col">
+            <div class="slds-truncate">财务打款</div>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngIf="refundOrder!=null">
+        <th scope="row" data-label="Opportunity Name">
+            <div class="slds-truncate">{{refundOrder.returnSn}}</div>
+        </th>
+        <td data-label="Account Name">
+            <div class="slds-truncate">{{refundOrder.orderId}}</div>
+        </td>
+        <td data-label="Close Date">
+            <div class="slds-truncate">{{refundOrder.returnTime}}</div>
+        </td>
+        <td data-label="Prospecting">
+            <div class="slds-truncate">{{refundOrder.applyAmount/100|number:'1.2-2'}}</div>
+        </td>
+        <td data-label="Confidence">
+            <div class="slds-truncate">{{refundOrder.customerShippingAmount/100|number:'1.2-2'}}</div>
+        </td>
+        <td data-label="Amount">
+            <div class="slds-truncate">{{refundOrder.refundStatus}}</div>
+        </td>
+        <td data-label="Amount">
+            <div class="slds-truncate">{{refundOrder.refundAmount/100|number:'1.2-2'}}</div>
+        </td>
+        <td data-label="Amount">
+            <div class="slds-truncate">{{refundOrder.confirmTime}}</div>
+        </td>
+        <td data-label="Contact">
+            <div class="slds-truncate" *ngIf="refundOrder.refundStatus=='confirm'">
+                <button class="slds-button slds-button--brand" (click)="pullFinance()">财务打款</button>
+            </div>
+            <div class="slds-truncate text-success" *ngIf="refundOrder.refundStatus=='finish'">退款完成</div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-grid slds-wrap" *ngIf="refundGoodsDataList.length!=0&&refundOrder==null">
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">确认退款金额</label>
+                <div class="slds-form-element__control slds-float--left">
+                    <div class="slds-form-element__control">
+                        <input type="number" class="slds-input" [(ngModel)]="returnOrderAmount"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">运费退款金额</label>
+                <div class="slds-form-element__control slds-float--left">
+                    <div class="slds-form-element__control">
+                        <input type="number" class="slds-input" [(ngModel)]="freightAmount"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <button class="slds-button slds-button--brand" (click)="createRefundOrder()">生成退款单</button>
+        </div>
+    </div>
+
+    <!--退款单修改-->
+    <div class="slds-grid slds-wrap" *ngIf="refundOrder!=null&&refundOrder.refundStatus=='confirm'">
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">确认退款金额</label>
+                <div class="slds-form-element__control slds-float--left">
+                    <div class="slds-form-element__control">
+                        <input type="number" class="slds-input" [(ngModel)]="returnOrderAmount"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">运费退款金额</label>
+                <div class="slds-form-element__control slds-float--left">
+                    <div class="slds-form-element__control">
+                        <input type="number" class="slds-input" [(ngModel)]="freightAmount"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <button class="slds-button slds-button--brand" (click)="editRefundOrder()">退款单修改</button>
+        </div>
+    </div>
+</div>
+
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

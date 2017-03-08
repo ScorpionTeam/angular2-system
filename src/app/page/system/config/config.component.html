@@ -1,0 +1,132 @@
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <search-component [showIcon]="false" [debounce]="2000"
+                      [placeHolder]="placeholder"
+                      (searchKey)="searchByCondition($event)"></search-component>
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="configList.rows" trackByKey="rank"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="ID" key="id"></ngl-datatable-column>
+        <ngl-datatable-column heading="字典名称" key="dirtKey">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="字典描述" key="dirtDesc">
+            <template nglDatatableCell let-value>
+                <span class="text-success">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="字典数据名称" key="dataKey">
+            <template nglDatatableCell let-value>
+                {{value|json}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="字典数据值" key="dataValue">
+            <template nglDatatableCell let-value>
+                <span class="text-danger">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="字典数据描述" key="dataDesc"></ngl-datatable-column>
+        <ngl-datatable-column heading="是否可以修改" key="isFixed">
+            <template nglDatatableCell let-value>
+                <b>{{value=='0'|threeElementExpression:'是;否'}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作" key="">
+            <template nglDatatableCell let-row="row">
+                <button class="slds-button slds-button--brand" (click)="edit(row)">编辑</button>
+            </template>
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+<!--分页-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="configList.total" [perPage]="configList.size"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+<!--编辑模态-->
+<ngl-modal header="配置项编辑" [(open)]="configOpen">
+    <div body>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">字典ID</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{configEditObj.id}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">字典名称</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{configEditObj.dirtKey}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">字典描述</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{configEditObj.dirtDesc}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">字典数据名称</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{configEditObj.dataKey}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">字典数据描述</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{configEditObj.dataDesc}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">是否可修改</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{configEditObj.isFixed=='0'|threeElementExpression:'是;否'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <ngl-form-element class="slds-m-top--small">
+                    <template nglFormLabel><i>字典数据值</i></template>
+                    <textarea nglFormControl [required]="required" [(ngModel)]="configEditObj.dataValue"></textarea>
+                </ngl-form-element>
+            </div>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="cancel()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="confirmEdit()">编辑</button>
+    </template>
+</ngl-modal>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

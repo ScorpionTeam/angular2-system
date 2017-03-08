@@ -1,0 +1,27 @@
+<div class="container-fluid bg-primary">
+    <div class="row" style="height: 100%;">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div class="card" style="margin-top: 30%;box-shadow: 10px 10px 10px 0 #3f51b5">
+                <div class="card-header" style="text-align: center;color:rgba(2,117,216,1)">
+                    <span>花啦生活</span>
+                </div>
+                <div class="card-block">
+                    <ngl-form-element  class="slds-m-top--small">
+                        <input nglFormControl type="text" placeholder="用户名"  [(ngModel)]="user.username" autofocus>
+                    </ngl-form-element>
+                    <ngl-form-element   class="slds-m-top--small">
+                        <input nglFormControl type="password" placeholder="密码"  [(ngModel)]="user.password">
+                    </ngl-form-element>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn-primary" nglButton="neutral" (click)="login()">登录</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+
+<!--登录提示信息-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage" [showAlert]="toast.showAlert"></toast-component>

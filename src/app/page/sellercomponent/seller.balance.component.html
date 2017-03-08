@@ -1,0 +1,168 @@
+<div class="slds-scrollable">
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+        <thead>
+        <tr class="slds-text-title--caps">
+            <th scope="col">
+                <div class="slds-truncate" title="Opportunity Name">余额{{balanceData.balance/100|number:'1.2-2'}}</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="Account Name">总收入</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="Close Date">结算收入</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="Stage">奖励</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate" title="Confidence">其它</div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td scope="row">
+                <div class="slds-truncate">全部</div>
+            </td>
+            <td scope="row" data-label="Opportunity Name">
+                <div class="slds-truncate">{{balanceData.intoAmount/100|number:'1.2-2'}}</div>
+            </td>
+            <td data-label="Account Name">
+                <div class="slds-truncate">{{balanceData.autoIncomeAmount/100|number:'1.2-2'}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{balanceData.rewardAmount/100|number:'1.2-2'}}</div>
+            </td>
+            <td data-label="Prospecting">
+                <div class="slds-truncate">{{balanceData.otherAmount/100|number:'1.2-2'}}</div>
+            </td>
+        </tr>
+        <tr>
+            <td scope="row">
+                <div class="slds-truncate">未发送</div>
+            </td>
+            <td scope="row" data-label="Opportunity Name">
+                <div class="slds-truncate">{{balanceData.noSendIntoAmount/100|number:'1.2-2'}}</div>
+            </td>
+            <td data-label="Account Name">
+                <div class="slds-truncate">{{balanceData.noSendAutoIncomeAmount/100|number:'1.2-2'}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{balanceData.noSendRewardAmount/100|number:'1.2-2'}}</div>
+            </td>
+            <td data-label="Prospecting">
+                <div class="slds-truncate">{{balanceData.noSendOtherAmount/100|number:'1.2-2'}}</div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--3-of-12">
+        <ngl-form-element class="slds-m-top--small">
+            <select nglFormControl class="slds-select" [(ngModel)]="key">
+                <option value="all">全部</option>
+                <option value="auto_income">自动结算</option>
+                <option value="hand_income">手动结算</option>
+                <option value="offset">冲账</option>
+                <option value="withdraw">提现</option>
+                <option value="reward">奖励</option>
+                <option value="punish">惩罚</option>
+            </select>
+        </ngl-form-element>
+    </div>
+    <div class="slds-size--3-of-12">
+        <div class="slds-button-group" role="group" style="padding-top: 30px;padding-left: 10px;">
+            <button class="slds-button slds-button--neutral" (click)="search()">查询</button>
+            <button class="slds-button slds-button--neutral" (click)="adjustmentAccount()">账户调整</button>
+        </div>
+    </div>
+</div>
+<table ngl-datatable [data]="balanceDataList.rows" trackByKey="rank"
+       class="slds-max-medium-table--stacked-horizontal">
+    <ngl-datatable-column heading="结算时间" key="addTime" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="类型" key="type" cellClass="slds-truncate">
+        <template nglDatatableCell let-value>
+            <span class="text-success" *ngIf="value=='auto_income'">自动结算</span>
+            <span class="text-success" *ngIf="value=='hand_income'">手动结算</span>
+            <span class="text-success" *ngIf="value=='offset'">冲账</span>
+            <span class="text-success" *ngIf="value=='withdraw'">提现</span>
+            <span class="text-success" *ngIf="value=='reward'">奖励</span>
+            <span class="text-success" *ngIf="value=='punish'">惩罚</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="发送状态" key="payResponseStatus">
+        <template nglDatatableCell let-row="row">
+            <span class="text-danger" *ngIf="row.payResponseStatus=='1'">已发送</span>
+            <span class="text-danger" *ngIf="row.payResponseStatus=='0'&&row.financeBatchNo!=undefined">发送失败</span>
+            <span class="text-danger" *ngIf="row.payResponseStatus=='0'&&row.financeBatchNo==undefined">转入中</span>
+        </template>
+
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="金额" key="amount" cellClass="slds-truncate">
+        <template nglDatatableCell let-value>
+            <span class="text-success">{{value/100|number:'1.2-2'}}</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="发送时间" key="financeBatchNoTime" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="备注" key="remark" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="操作" key="">
+        <template nglDatatableCell let-row="row">
+            <div class="slds-button-group" role="group">
+                <button *ngIf="row.payResponseStatus=='0'&&row.financeBatchNo!=undefined"
+                        class="slds-button slds-button--brand" (click)="sendBalance(row)">重发
+                </button>
+                <button *ngIf="row.payResponseStatus=='0'&&row.financeBatchNo==undefined"
+                        class="slds-button slds-button--brand" (click)="sendBalance(row)">发送
+                </button>
+            </div>
+        </template>
+    </ngl-datatable-column>
+    <!-- No rows overlay -->
+    <template nglNoRowsOverlay>暂无数据!</template>
+</table>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="balanceDataList.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>
+
+<!--账户调整模态-->
+<ngl-modal header="账户调整" size="small" [(open)]="adjustOpened">
+    <div body>
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--4-of-12 slds-align--absolute-center">
+                <ngl-form-element label="结算类型" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [(ngModel)]="adjustObj.type">
+                        <option value="offset">冲账</option>
+                        <option value="reward">奖励</option>
+                        <option value="punish">惩罚</option>
+                    </select>
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--4-of-12 slds-align--absolute-center">
+                <ngl-form-element label="结算金额" class="slds-m-top--small">
+                    <input nglFormControl type="number" [(ngModel)]="adjustObj.amount">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--4-of-12 slds-align--absolute-center">
+                <ngl-form-element label="备注" class="slds-m-top--small">
+                    <input nglFormControl type="text" [(ngModel)]="adjustObj.remark">
+                </ngl-form-element>
+            </div>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="closeAdjustModal()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="saveAdjust()">调整</button>
+    </template>
+</ngl-modal>

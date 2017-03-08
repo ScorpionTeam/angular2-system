@@ -1,0 +1,24 @@
+<div class="slds-form-element">
+    <div class="slds-form-element__control">
+        <div class="slds-file-selector slds-file-selector--images">
+            <div class="slds-file-selector__dropzone">
+                <input type="file" #fileselect hidden="hidden" (change)="listenFileChange(fileselect)">
+                <button type="button" nglButton="neutral" (click)="openFileSelect(fileselect)" *ngIf="prevFile==''">
+                    <ngl-icon icon="upload" align="left"></ngl-icon>
+                    选择图片
+                </button>
+                <span *ngIf="prevFile!=''" style="position: absolute">
+                    <button type="button" nglButton="neutral" (click)="reSelect(fileselect)">重新选择</button>
+                </span>
+                <img *ngIf="prevFile!=''" [src]="prevFile" style="width: 100%;height: 100%">
+            </div>
+            <div class="slds-card__footer slds-text-align--center">
+              <button type="button" nglButton="neutral" (click)="uploadAll()">上传</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toastType" [toastMessage]="toastMessage"
+                 [showAlert]="showAlert"></toast-component>

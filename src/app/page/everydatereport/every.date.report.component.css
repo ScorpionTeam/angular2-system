@@ -1,0 +1,41 @@
+.slds-size--3-of-12 {
+    padding: 5px;
+}
+
+.slds-size--3-of-12 .widget-thumb-wrap {
+    background: #74838e;
+    padding: 20px;
+}
+
+.slds-size--3-of-12 .widget-thumb-wrap .wrap-thumb > span {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 900;
+}
+.slds-size--3-of-12 .widget-thumb-wrap .wrap-thumb .wap-small{
+    font-size: 13px !important;
+}
+
+.slds-size--3-of-12 .widget-thumb-wrap > h4 {
+    margin: 0 0 20px;
+    font-size: 16px;
+    color: #fff;
+    font-weight: bolder;
+}
+
+.slds-size--3-of-12 .widget-thumb-wrap .wrap-thumb > i {
+    color: #fff;
+    padding: 12px;
+    background: #04844b;
+}
+
+.slds-trial-header {
+    color: #fff;
+    height: 3.125rem;
+    background: #061c3f;
+    padding: 0 1rem;
+}
+
+.slds-grid .slds-m-right--small {
+    line-height: 50px;
+}

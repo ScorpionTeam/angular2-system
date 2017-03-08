@@ -1,0 +1,15 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+  <div class="slds-size--1-of-1">
+    公司
+  </div>
+</div>
+  <ngl-tabs [(selected)]="selectedTab">
+    <template ngl-tab heading="所有公司" nglTabId="companyList">
+      <company-list></company-list>
+    </template>
+    <template ngl-tab heading="新增公司" nglTabId="addCompany">
+      <company-info></company-info>
+    </template>
+  </ngl-tabs>
+

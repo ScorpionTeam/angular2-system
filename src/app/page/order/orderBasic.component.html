@@ -1,0 +1,142 @@
+<div class="slds-grid slds-wrap slds-size--2-of-2">
+  <div class="slds-size--1-of-2">
+    <div class="slds-panel__section">
+      <h3 class="slds-text-heading--medium text-danger slds-m-bottom--medium">
+        {{orderBasic.orderSn}}</h3>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">店铺名称</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static">{{orderBasic.sellerName}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">收货人电话</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static">
+            <ngl-badge type="info">{{orderBasic.mobile}}</ngl-badge>
+          </span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">商品金额</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static"><b>{{orderBasic.goodAmount}}</b></span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">优惠金额</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static text-warning">{{orderBasic.discountAmount}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">支付金额</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static text-danger">{{orderBasic.payAmount}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">配送方式</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static slds-text-longform">{{orderBasic.shippingTypeStr}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">支付渠道</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static slds-text-longform">{{orderBasic.orderTypeStr}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">付款日期</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static slds-text-longform">{{orderBasic.payTime}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slds-size--1-of-2">
+    <div class="slds-panel__section">
+      <h3 class="slds-text-heading--medium slds-m-bottom--medium">
+        <ngl-badge type="error" *ngIf="orderBasic.isFirst == 0">{{orderBasic.isFirstStr}}</ngl-badge>
+        <ngl-badge type="success" *ngIf="orderBasic.isFirst == 1">{{orderBasic.isFirstStr}}</ngl-badge>
+      </h3>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">收货人</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static">{{orderBasic.consignee}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">收获地址</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static">{{orderBasic.address}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">运费金额</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static text-info">{{orderBasic.shippingAmount}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">订单金额</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static text-danger">{{orderBasic.orderAmount}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">订单状态</span>
+        <div class="slds-form-element__control">
+              <span class="slds-form-element__static">
+                 <ngl-badge type="success"
+                            *ngIf="orderBasic.orderStatus == 'have_done'">{{orderBasic.orderStatusStr}}</ngl-badge>
+                 <ngl-badge type="warning"
+                            *ngIf="orderBasic.orderStatus != 'have_done'">{{orderBasic.orderStatusStr}}</ngl-badge>
+              </span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">支付方式</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static slds-text-longform">{{orderBasic.payType}}</span>
+        </div>
+      </div>
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">配送日期</span>
+        <div class="slds-form-element__control">
+          <span class="slds-form-element__static slds-text-longform">{{orderBasic.shippingTime | date: "yyyy-MM-dd HH:mm:ss"}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slds-size--2-of-2">
+    <div class="slds-panel__section">
+      <div class="slds-form-element slds-hint-parent slds-has-divider--bottom">
+        <span class="slds-form-element__label">所购商品</span>
+        <div class="slds-form-element__control">
+          <table ngl-datatable [data]="orderGoods">
+            <ngl-datatable-column heading="商品名称" key="goodsName"></ngl-datatable-column>
+            <ngl-datatable-column heading="供应商名称" key="supplierName"></ngl-datatable-column>
+            <ngl-datatable-column heading="原价" key="recPrice">
+              <template nglDatatableCell let-value>
+                {{value/100|number:'1.2-2'}}
+              </template>
+            </ngl-datatable-column>
+            <ngl-datatable-column heading="售价" key="salePrice">
+              <template nglDatatableCell let-value>
+                {{value/100|number:'1.2-2'}}
+              </template>
+            </ngl-datatable-column>
+            <ngl-datatable-column heading="数量" key="goodsNumber"></ngl-datatable-column>
+            <ngl-datatable-column heading="状态" key="goodsName">
+              <template nglDatatableCell let-row="row">
+                <ngl-badge type="info">{{row.orderGoodsStatusStr}}</ngl-badge>
+              </template>
+            </ngl-datatable-column>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

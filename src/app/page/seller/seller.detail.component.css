@@ -1,0 +1,16 @@
+.seller-detail {
+    margin-top: 20px;
+}
+
+.seller-detail .seller-title > h1 {
+    line-height: 40px;
+}
+
+.seller-head-img {
+    width: 5rem !important;
+    height: 5rem !important;
+}
+
+.seller-head-img:hover {
+    cursor: pointer;
+}

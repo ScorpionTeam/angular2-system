@@ -1,0 +1,63 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    基础统计
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="sqlDataList" class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="id" key="id"></ngl-datatable-column>
+        <ngl-datatable-column heading="所属组" key="group_name"></ngl-datatable-column>
+        <ngl-datatable-column heading="描述" key="sql_name">
+            <template nglDatatableCell let-value>
+                <span class="text-danger">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="状态" key="is_delete">
+            <template nglDatatableCell let-value>
+                <span *ngIf="value=='1'" class="text-danger">已删除</span>
+                <span *ngIf="value=='0'" class="text-info">正常</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作" key="">
+            <template nglDatatableCell let-row="row">
+                <button class="slds-button slds-button--brand" (click)="execute(row)">执行</button>
+            </template>
+        </ngl-datatable-column>
+    </table>
+</div>
+
+<!--基础统计执行结果列表-->
+<ngl-modal [(open)]="opened" header="基础统计" size="large">
+    <div body>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <search-component [showIcon]="false" [debounce]="2000" [placeHolder]="placeholder"
+                              (searchKey)="searchByCondition($event)"></search-component>
+        </div>
+        <div class="slds-scrollable">
+            <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                <thead>
+                <tr class="slds-text-title--caps">
+                    <th scope="col" *ngFor="let title of titles">
+                        <div class="slds-truncate">{{title}}</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let v of values">
+                    <td data-label="Account Name" *ngFor="let s of v">
+                        <div class="slds-truncate">{{s}}</div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <ngl-pagination [(page)]="pageOpts.page" [total]="sqlData.total" [perPage]="pageOpts.perPage"
+                            [limit]="pageOpts.limit"
+                            boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                            nextText="下一页"></ngl-pagination>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="cancel()">关闭</button>
+    </template>
+</ngl-modal>

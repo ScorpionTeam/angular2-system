@@ -1,0 +1,42 @@
+<div class="slds-grid slds-wrap">
+    <div class="slds-size--4-of-12">
+        <seller-little-component (targetSeller)="copySeller($event)"></seller-little-component>
+    </div>
+    <div class="slds-size--1-of-12"></div>
+    <div class="slds-size--7-of-12">
+        <div class="slds-page-header">
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate">
+                    <div class="slds-media slds-no-space slds-grow">
+                        <div class="slds-media__figure">
+                            <img [src]="commonsUrl+currentSeller.imgUrl" style="width: 80px;height: 80px;"alt="店铺头像">
+                        </div>
+                        <div class="slds-media__body">
+                            <p class="slds-text-title--caps slds-line-height--reset">店铺名称</p>
+                            <h1 class="slds-page-header__title slds-m-right--small slds-align-middle slds-truncate"
+                                title="this should match the Record Title">{{currentSeller.name}}</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-no-flex slds-grid slds-align-top">
+                    <div class="slds-button-group" role="group">
+                        <button class="slds-button slds-button--brand">新增</button>
+                        <button class="slds-button slds-button--neutral">默认导入</button>
+                        <button class="slds-button slds-button--neutral">商品导入</button>
+                        <button class="slds-button slds-button--destructive" (click)="muiltyDel()">删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <seller-goods-component (emitGoods)="receiveGoods($event)" [showCheckBox]="showCheckBox" [currentSeller]="currentSeller"></seller-goods-component>
+    </div>
+</div>
+
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>
+

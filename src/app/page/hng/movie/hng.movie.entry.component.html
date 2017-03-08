@@ -1,0 +1,100 @@
+<div class="slds-wrap slds-grid">
+    <div class="slds-size--4-of-12">
+        <seller-little-component (targetSeller)="targetFunction($event)"></seller-little-component>
+    </div>
+    <div class="slds-size--1-of-12"></div>
+    <div class="slds-size--7-of-12">
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            活动创建
+        </div>
+        <div class="slds-srap slds-grid">
+            <div class="slds-form-element" style="padding-top: 20px;">
+                <label class="slds-form-element__label slds-float--left" style="line-height: 2rem;">活动时间</label>
+                <div class="slds-form-element__control slds-float--left">
+                    <input type="text" class="slds-input" [(ngModel)]="currentActiveObj.playTime"/>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-form-element" style="padding-top: 20px;">
+                <label class="slds-form-element__label slds-float--left" style="line-height: 2rem;">活动地点</label>
+                <div class="slds-form-element__control slds-float--left">
+                    <input type="text" class="slds-input" [(ngModel)]="currentActiveObj.address"/>
+                </div>
+            </div>
+            <div class="slds-form-element" style="padding-top: 20px;padding-left: 10px;">
+                <label class="slds-form-element__label slds-float--left" style="line-height: 2rem;">店铺</label>
+                <div class="slds-form-element__control slds-float--left">
+                    <input type="text" class="slds-input" [(ngModel)]="currentActiveObj.sellerName" disabled/>
+                </div>
+            </div>
+        </div>
+        <table ngl-datatable [data]="movieList"
+               class="slds-max-medium-table--stacked-horizontal">
+            <ngl-datatable-column heading="影片海报" key="url">
+                <template nglDatatableCell let-value>
+                    <img src="{{commonImgUrl}}{{value}}" style="height: 60px;width: 80px;">
+                </template>
+            </ngl-datatable-column>
+            <ngl-datatable-column heading="影片名称" key="name"></ngl-datatable-column>
+            <ngl-datatable-column heading="导演" key="director"></ngl-datatable-column>
+            <ngl-datatable-column heading="演员" key="actor"></ngl-datatable-column>
+            <ngl-datatable-column heading="类型" key="type"></ngl-datatable-column>
+            <ngl-datatable-column heading="操作" key="">
+                <template nglDatatableCell let-row="row">
+                    <div class="slds-button-group" role="group">
+                        <button class="slds-button slds-button--brand" (click)="edit(row)">编辑</button>
+                        <button class="slds-button slds-button--destructive" (click)="delClick(row)">删除</button>
+                    </div>
+                </template>
+            </ngl-datatable-column>
+        </table>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" (click)="openEntryModal();">录入影片信息
+                </button>
+                <button class="slds-button slds-button--brand" (click)="saveActivity()">保存活动信息</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--影片录入模态-->
+<ngl-modal header="影片信息" [(open)]="opened">
+    <div body>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <img-upload-component></img-upload-component>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="店铺" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaMovieObj.sellerName" disabled>
+                </ngl-form-element>
+                <ngl-form-element label="影片名称" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaMovieObj.name">
+                </ngl-form-element>
+                <ngl-form-element label="演员" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaMovieObj.actor">
+                </ngl-form-element>
+                <ngl-form-element label="导演" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaMovieObj.director">
+                </ngl-form-element>
+                <ngl-form-element label="影片类型" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaMovieObj.type">
+                </ngl-form-element>
+            </div>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="cancles()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="saveMovie()">保存</button>
+    </template>
+</ngl-modal>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

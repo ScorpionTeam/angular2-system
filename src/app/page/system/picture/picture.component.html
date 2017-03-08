@@ -1,0 +1,85 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-wrap slds-grid">
+        <div class="slds-size--1-of-1">
+            <button class="slds-button slds-button--neutral" (click)="returnPreviousFolder()">返回上级目录</button>
+            <button class="slds-button slds-button--brand" (click)="uploadOpened=!uploadOpened">上传图片</button>
+        </div>
+    </div>
+</div>
+<div class="slds-grid">
+    <div class="slds-col slds-wrap">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-box--small slds-text-align--center slds-size--2-of-12"
+                 *ngFor="let picture of pictureList.children">
+                <a (click)="folderClick(picture)">
+                    <ngl-icon *ngIf="picture.hasChildren==true" icon="image" category="doctype" size="large"
+                              class="large"></ngl-icon>
+                </a>
+                <br>
+                <img *ngIf="picture.hasChildren!=true" data-src="{{commonImgUrl}}/{{folder}}{{picture.name}}" alt=""
+                     style="height: 80px;width: 80px" (click)="openModal($event)"><br>
+                <span>{{picture.name}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--分页-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="pictureList.total"
+                    [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+<!--图片详情模态-->
+<ngl-modal header="图片" [(open)]="opened">
+    <div body class="slds-align--absolute-center">
+        <img [src]="currentImg">
+    </div>
+    <template ngl-modal-footer>
+        <div class="slds-p-horizontal--small slds-large-size-4-of-12">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">图片地址</label>
+                <div class="slds-form-element__control slds-float--left slds-size--6-of-12">
+                    <div class="slds-form-element__control slds-size--1-of-1">
+                        <input type="text" class="slds-input" [(ngModel)]="currentImg"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="slds-button slds-button--neutral" (click)="cancel()">关闭</button>
+    </template>
+</ngl-modal>
+
+<!--图片上传模态-->
+<ngl-modal header="图片上传" [(open)]="uploadOpened">
+    <div body class="slds-align--absolute-center">
+        <div class="slds-size--6-of-12">
+            <img-upload-component (uploadAddr)="uploadResult=$event" [uploadFolder]="targetFolder"></img-upload-component>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <div class="slds-size--6-of-12">
+            <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">文件目录</label>
+                    <div class="slds-form-element__control slds-float--left">
+                        <div class="slds-select_container">
+                            <select class="slds-select" [(ngModel)]="targetFolder">
+                                <option value="goods">商品</option>
+                                <option value="activity">活动</option>
+                                <option value="banner">banner</option>
+                                <option value="article">文章</option>
+                                <option value="ads">广告</option>
+                                <option value="company">公司</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="slds-button slds-button--neutral" (click)="closeUpload()">关闭</button>
+    </template>
+</ngl-modal>

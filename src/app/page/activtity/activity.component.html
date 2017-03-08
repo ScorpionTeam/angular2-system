@@ -1,0 +1,57 @@
+<div class="slds-wrap slds-grid">
+    <div class="slds-size--4-of-12">
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--info">
+            活动列表
+        </div>
+        <table ngl-datatable [data]="activities.rows" class="slds-max-medium-table--stacked-horizontal"
+               trackByKey="date">
+            <ngl-datatable-column heading="ID" key="id"></ngl-datatable-column>
+            <ngl-datatable-column heading="名称" key=""></ngl-datatable-column>
+            <ngl-datatable-column heading="类型" key=""></ngl-datatable-column>
+            <ngl-datatable-column heading="时间" key=""></ngl-datatable-column>
+            <template nglNoRowsOverlay>暂无数据!</template>
+        </table>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <ngl-pagination [(page)]="pageOpts.page" [total]="activities.total" [perPage]="pageOpts.perPage"
+                            [limit]="pageOpts.limit"
+                            boundaryNumbers="1" #pagination1 (pageChange)="pageChange($event)" previousText="上一页"
+                            nextText="下一页"></ngl-pagination>
+        </div>
+    </div>
+    <div class="slds-size--1-of-12"></div>
+    <div class="slds-size--7-of-12">
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--info">
+            <div class="slds-size--3-of-12 slds-float--right">
+                <button class="slds-button slds-button--brand" (click)="openModal()">新增活动商品</button>
+            </div>
+        </div>
+        <table ngl-datatable [data]="activityGoods.rows" class="slds-max-medium-table--stacked-horizontal"
+               trackByKey="date">
+            <ngl-datatable-column heading="id" key=""></ngl-datatable-column>
+            <ngl-datatable-column heading="名称" key=""></ngl-datatable-column>
+            <ngl-datatable-column heading="销售价" key=""></ngl-datatable-column>
+            <ngl-datatable-column heading="协议价" key=""></ngl-datatable-column>
+        </table>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <ngl-pagination [(page)]="goodsPageOpts.page" [total]="activityGoods.total" [perPage]="goodsPageOpts.perPage"
+                            [limit]="goodsPageOpts.limit"
+                            boundaryNumbers="1" #pagination2 (pageChange)="activityGoodsPageChange($event)" previousText="上一页"
+                            nextText="下一页"></ngl-pagination>
+        </div>
+    </div>
+</div>
+
+<!--设置活动商品模态-->
+<ngl-modal header="设置活动商品" [(open)]="opened" size="large">
+    <div body>
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--4-of-12">
+                <seller-little-component (targetSeller)="copyValue($event)"></seller-little-component>
+            </div>
+            <div class="slds-size--1-of-12"></div>
+            <div class="slds-size--7-of-12">
+                <goods-global-component [currentSellerId]="currentSeller.id"></goods-global-component>
+            </div>
+        </div>
+    </div>
+</ngl-modal>

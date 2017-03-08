@@ -1,0 +1,85 @@
+<!--搜索头-->
+<div class=" slds-align--absolute-center slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--4-of-12 ">
+        <search-component [showIcon]="false" [debounce]="2000" [placeHolder]="placeholder"
+                          (searchKey)="searchByCondition($event)"></search-component>
+    </div>
+</div>
+<!--查询条件-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-grid slds-size--1-of-1 slds-wrap">
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">招聘状态</label>
+                <div class="slds-form-element__control slds-float--left">
+                    <div class="slds-select_container">
+                        <select class="slds-select" [(ngModel)]="conditions.status">
+                            <option [value]="0">招聘中</option>
+                            <option [value]="1">未开始</option>
+                            <option [value]="2">已结束</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">公司</label>
+            <div class="slds-form-element__control slds-float--left">
+                <div class="slds-select_container">
+                    <select class="slds-select" [(ngModel)]="conditions.companyId">
+                        <option [value]="c.id" *ngFor="let c of companyDataList">{{c.companyName}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">岗位</label>
+            <div class="slds-form-element__control slds-float--left">
+                <div class="slds-select_container">
+                    <select class="slds-select" [(ngModel)]="conditions.jobId">
+                        <option [value]="j.id" *ngFor="let j of jobDataList">{{j.jobName}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+            <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">范围</label>
+            <div class="slds-form-element__control slds-float--left">
+                <div class="slds-select_container">
+                    <select class="slds-select" [(ngModel)]="conditions.sellerScope">
+                        <option [value]="0" selected>全部商家</option>
+                        <option [value]="1">部分商家</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="slds-p-horizontal--small slds-large-size-3-of-12">
+            <button class="slds-button slds-button--neutral" (click)="querySellerDataByBtn()">查询</button>
+        </div>
+        <div class="slds-p-horizontal--small slds-large-size-3-of-12">
+            <button class="slds-button slds-button--neutral" (click)="exportExcel()">导出Excel</button>
+        </div>
+    </div>
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="staticsData.rows" trackByKey="id"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="序号" key="id"></ngl-datatable-column>
+        <ngl-datatable-column heading="招聘编码" key="recruitCode"></ngl-datatable-column>
+        <ngl-datatable-column heading="商家" key="sellerName"></ngl-datatable-column>
+        <ngl-datatable-column heading="开始时间" key="startTime"></ngl-datatable-column>
+        <ngl-datatable-column heading="申请公司" key="companyName"></ngl-datatable-column>
+        <ngl-datatable-column heading="申请岗位" key="jobName"></ngl-datatable-column>
+        <ngl-datatable-column heading="申请时间" key="applyTime"></ngl-datatable-column>
+        <ngl-datatable-column heading="申请人" key="applyName"></ngl-datatable-column>
+        <ngl-datatable-column heading="联系电话" key="applyPhone"></ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+<!--底部分页-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="staticsData.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>

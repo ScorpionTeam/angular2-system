@@ -1,0 +1,63 @@
+<div class="slds-grid slds-wrap">
+    <div class="slds-size--6-of-12">
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <search-component showIcon="false" debounce="2000" placeHolder="搜索..id 手机 名称"
+                              (searchKey)="searchByCondition($event)"></search-component>
+            <button class="slds-button slds-button--brand" (click)="syncAccount()">同步</button>
+        </div>
+    </div>
+    <div class="slds-size--6-of-12">
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+                <div class="slds-form-element">
+                    <div class="slds-form-element__control slds-float--left">
+                        <div class="slds-select_container">
+                            <select class="slds-select" [(ngModel)]="type">
+                                <option value="all">全部-(业务类型)</option>
+                                <option value="1">交易</option>
+                                <option value="2">充值</option>
+                                <option value="3">提现</option>
+                                <option value="4">转账</option>
+                                <option value="5">退款</option>
+                                <option value="6">调账</option>
+                                <option value="7">结算</option>
+                                <option value="8">内部转账</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="slds-button slds-button--brand" (click)="search()">查询</button>
+        </div>
+    </div>
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="sellerTransferDataList.rows" trackByKey="rank"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="订单号" key="o_order_no">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="类型" key="type_name"></ngl-datatable-column>
+        <ngl-datatable-column heading="日期" key="date"></ngl-datatable-column>
+        <ngl-datatable-column heading="金额" key="amount">
+            <template nglDatatableCell let-value>
+                <span class="text-success">{{value/100|number:'1.2-2'}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="状态" key="status_desc"></ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="sellerTransferDataList.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

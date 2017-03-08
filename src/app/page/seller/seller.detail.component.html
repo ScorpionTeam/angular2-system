@@ -1,0 +1,132 @@
+<div class="slds-page-header">
+    <div class="slds-grid">
+        <div class="slds-col slds-has-flexi-truncate">
+            <div class="slds-media slds-no-space slds-grow">
+                <div class="slds-media__figure">
+                    <img [src]="commonImgUrl+sellerObj.imgUrl" style="width: 80px;height: 80px;" alt="店铺头像">
+                </div>
+                <div class="slds-media__body">
+                    <div class="slds-tile__detail slds-text-body--large">
+                        <dl class="slds-list--horizontal slds-wrap">
+                            <dt class="slds-item--label slds-text-color--weak slds-truncate">店铺名称:</dt>
+                            <dd class="slds-item--detail slds-truncate">{{sellerObj.name}}</dd>
+                            <dt class="slds-item--label slds-text-color--weak slds-truncate">店铺状态:</dt>
+                            <dd class="slds-item--detail slds-truncate text-danger" *ngIf="sellerObj.isDelete=='0'">
+                                营业中
+                            </dd>
+                            <dd class="slds-item--detail slds-truncate text-danger" *ngIf="sellerObj.isDelete=='1'">删除
+                            </dd>
+                            <dd class="slds-item--detail slds-truncate text-danger" *ngIf="sellerObj.isDelete=='2'">
+                                审核中
+                            </dd>
+                            <dd class="slds-item--detail slds-truncate text-danger" *ngIf="sellerObj.isDelete=='3'">
+                                审核失败
+                            </dd>
+                            <dt class="slds-item--label slds-text-color--weak slds-truncate">店铺类型:</dt>
+                            <dd class="slds-item--detail slds-truncate text-danger">
+                                {{sellerObj.sellerType=='1'|threeElementExpression:'烟店;超市'}}
+                            </dd>
+                            <dt class="slds-item--label slds-text-color--weak slds-truncate">联系电话:</dt>
+                            <dd class="slds-item--detail slds-truncate text-danger">{{sellerObj.phone}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-col slds-no-flex slds-grid slds-align-top">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" (click)="editSellerInfo()">修改</button>
+                <button class="slds-button slds-button--neutral" (click)="sellerStatus('0')">开店</button>
+                <button class="slds-button slds-button--neutral" (click)="sellerStatus('1')">关店</button>
+                <button class="slds-button slds-button--neutral" (click)="sellerStatus('open')">上线</button>
+                <button class="slds-button slds-button--neutral" (click)="sellerStatus('close')">下线</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--tab列-->
+<ngl-tabs [(selected)]="selected">
+    <template ngl-tab heading="商家信息" nglTabId="sellerInfo">
+        <seller-combination-component [currentSeller]="sellerObj"></seller-combination-component>
+    </template>
+    <template ngl-tab heading="结算管理" nglTabId="balance">
+        <seller-balance-component [currentSeller]="sellerObj"></seller-balance-component>
+    </template>
+    <template ngl-tab heading="转账提现" nglTabId="transferAccount">
+        <seller-transfer-account-component [currentSeller]="sellerObj"></seller-transfer-account-component>
+    </template>
+    <template ngl-tab heading="银行卡" nglTabId="bank">
+        <seller-bank-component [currentSeller]="sellerObj"></seller-bank-component>
+    </template>
+    <template ngl-tab heading="卡券" nglTabId="card">
+        <card-component></card-component>
+    </template>
+</ngl-tabs>
+
+<!--店铺基本信息修改模态-->
+<ngl-modal header="店铺信息修改" [(open)]="sellerInfoOpened">
+    <div body>
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="店铺名称" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="sellerObj.name">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="店铺别名" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="sellerObj.aliasName">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="联系方式" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="sellerObj.phone">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="店铺地址" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="sellerObj.address">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="开店时间" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="sellerObj.openTime">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="关店时间" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="sellerObj.endTime">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="店铺经度" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="sellerObj.lng">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="店铺纬度" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="sellerObj.lat">
+                </ngl-form-element>
+            </div>
+        </div>
+        <!--<province-city-component></province-city-component>-->
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="cancel()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="updateSellerInfo()">保存</button>
+    </template>
+</ngl-modal>
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType"
+                 [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

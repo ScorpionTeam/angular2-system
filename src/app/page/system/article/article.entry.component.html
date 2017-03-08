@@ -1,0 +1,28 @@
+<div class="slds-grid slds-wrap slds-align--absolute-center">
+    <div class="slds-grid slds-wrap slds-size--1-of-1 ">
+        <div class="slds-button-group" role="group">
+            <button class="slds-button slds-button--destructive" (click)="saveArticle()">发布文章</button>
+        </div>
+    </div>
+    <div class="slds-size--8-of-12">
+        <ngl-form-element label="目录" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="cateObj.name" disabled>
+        </ngl-form-element>
+        <ngl-form-element label="标题" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="articleObj.title">
+        </ngl-form-element>
+        <ngl-form-element label="关键词" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="articleObj.keywords">
+        </ngl-form-element>
+        <ngl-form-element class="slds-m-top--small">
+            <template nglFormLabel><i>描述</i></template>
+            <textarea nglFormControl [required]="required" [(ngModel)]="articleObj.description"></textarea>
+        </ngl-form-element>
+        <quill-editor-component [editorContent]="articleObj.content" (emitContent)="articleObj.content=$event"></quill-editor-component>
+    </div>
+</div>
+<!--文章预览-->
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

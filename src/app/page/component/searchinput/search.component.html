@@ -1,0 +1,15 @@
+<ngl-lookup [lookup]="lookupAsync" [debounce]="debounce" [placeholder]="placeHolder">
+            <span nglPolymorphicLabel>
+                 <svg nglIconCategory="standard" [nglIcon]="scope.icon" [ngClass]="'slds-icon-standard-' + scope.icon"
+                      class="slds-icon slds-icon--small"></svg>
+            </span>
+    <template *ngIf="showIcon==true" nglPolymorphicItem [scopes]="scopes" (scopeChange)="scopeChange($event)"
+              let-item>
+        <p class="slds-truncate">
+            <svg nglIconCategory="standard" [nglIcon]="item.icon" [ngClass]="'slds-icon-standard-' + item.icon"
+                 class="slds-icon slds-icon--small slds-m-right--small"></svg>
+            {{item.value}}
+        </p>
+    </template>
+</ngl-lookup>
+

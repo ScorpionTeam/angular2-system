@@ -1,0 +1,31 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--10-of-12" style="background: #fff">
+        <search-component [showIcon]="true" [debounce]="2000" [placeHolder]="placeholder"
+                          (searchKey)="searchByCondition($event)"></search-component>
+    </div>
+</div>
+<table ngl-datatable [data]="sellerDataList.rows"
+       class="slds-max-medium-table--stacked-horizontal">
+    <ngl-datatable-column heading="ID" key="id" sortable></ngl-datatable-column>
+    <ngl-datatable-column heading="名称" key="name" cellClass="slds-truncate">
+        <template nglDatatableCell let-value>
+            <b class="text-danger">{{value}}</b>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="操作" key="">
+        <template nglDatatableCell let-row="row">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" (click)="onRowClick(row)">操作</button>
+            </div>
+        </template>
+    </ngl-datatable-column>
+    <!-- No rows overlay -->
+    <template nglNoRowsOverlay>暂无数据!</template>
+</table>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="sellerDataList.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>

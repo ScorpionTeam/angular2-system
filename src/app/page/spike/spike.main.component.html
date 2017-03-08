@@ -1,0 +1,8 @@
+<ngl-tabs [(selected)]="selected" (selectedChange)="tabChange($event)">
+    <template ngl-tab heading="秒杀商品列表" nglTabId="list">
+        <spike-list-component></spike-list-component>
+    </template>
+    <template ngl-tab heading="秒杀商品设置" nglTabId="entry">
+        <spike-entry-component></spike-entry-component>
+    </template>
+</ngl-tabs>

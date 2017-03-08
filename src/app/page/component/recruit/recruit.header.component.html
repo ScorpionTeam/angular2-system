@@ -1,0 +1,100 @@
+<div class="slds-grid">
+    <div class="slds-tabs--path" role="application">
+        <ul class="slds-tabs--path__nav" role="tablist">
+            <!--填写招聘信息标识-->
+            <li *ngIf="wriInfoStatus=='doing'" class="slds-tabs--path__item slds-is-current" role="presentation">
+                <a class="slds-tabs--path__link" id="tabs-path-423" aria-controls="content-path-1" aria-selected="false"
+                   tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+            <svg aria-hidden="true" class="slds-icon slds-icon--x-small">
+              <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+            </svg>
+          </span>
+                    <span class="slds-tabs--path__title">填写招聘信息</span>
+                </a>
+            </li>
+            <li *ngIf="wriInfoStatus=='complete'" class="slds-tabs--path__item slds-is-complete" role="presentation">
+                <a class="slds-tabs--path__link" id="tabs-path-91" aria-controls="content-path-1" aria-selected="false"
+                   tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+              填写招聘信息
+            <span class="slds-assistive-text">Stage Complete</span>
+          </span>
+                    <span class="slds-tabs--path__title">填写招聘信息</span>
+                </a>
+            </li>
+            <!--关联店铺信息标识-->
+            <li *ngIf="relativeSellerInfoStatus=='will'" class="slds-tabs--path__item slds-is-incomplete"
+                role="presentation">
+                <a class="slds-tabs--path__link" aria-controls="content-path-1" aria-selected="false"
+                   tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+            <svg aria-hidden="true" class="slds-icon slds-icon--x-small">
+              <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+            </svg>
+          </span>
+                    <span class="slds-tabs--path__title">关联店铺信息</span>
+                </a>
+            </li>
+
+            <li *ngIf="relativeSellerInfoStatus=='doing'" class="slds-tabs--path__item slds-is-current"
+                role="presentation">
+                <a class="slds-tabs--path__link" aria-controls="content-path-1" aria-selected="false"
+                   tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+            <svg class="slds-icon slds-icon--x-small" aria-hidden="true">
+              <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+            </svg>
+          </span>
+                    <span class="slds-tabs--path__title">关联店铺信息</span>
+                </a>
+            </li>
+
+            <li *ngIf="relativeSellerInfoStatus=='complete'" class="slds-tabs--path__item slds-is-complete" role="presentation">
+                <a class="slds-tabs--path__link" aria-controls="content-path-1" aria-selected="false"
+                   tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+              关联店铺信息
+            <span class="slds-assistive-text">Stage Complete</span>
+          </span>
+                    <span class="slds-tabs--path__title">关联店铺信息</span>
+                </a>
+            </li>
+            <li *ngIf="wriPublishTimeStatus=='will'" class="slds-tabs--path__item slds-is-incomplete"
+                role="presentation">
+                <a class="slds-tabs--path__link" id="tabs-path-425" aria-controls="content-path-1" aria-selected="false"
+                   tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+            <svg aria-hidden="true" class="slds-icon slds-icon--x-small">
+              <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+            </svg>
+          </span>
+                    <span class="slds-tabs--path__title">填写发布时间</span>
+                </a>
+            </li>
+            <li *ngIf="wriPublishTimeStatus=='doing'" class="slds-tabs--path__item slds-is-current"
+                role="presentation">
+                <a class="slds-tabs--path__link" aria-controls="content-path-1" aria-selected="false"
+                   tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+            <svg class="slds-icon slds-icon--x-small" aria-hidden="true">
+              <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+            </svg>
+          </span>
+                    <span class="slds-tabs--path__title">填写发布时间</span>
+                </a>
+            </li>
+            <li *ngIf="wriPublishTimeStatus=='complete'" class="slds-tabs--path__item slds-is-complete"
+                role="presentation">
+                <a class="slds-tabs--path__link" aria-controls="content-path-1" aria-selected="false"
+                   tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+              填写发布时间
+            <span class="slds-assistive-text">Stage Complete</span>
+          </span>
+                    <span class="slds-tabs--path__title">填写发布时间</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

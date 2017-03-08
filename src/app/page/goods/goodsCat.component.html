@@ -1,0 +1,24 @@
+<article class="slds-card" [hidden]="showDetail">
+    <div class="slds-card__header slds-grid">
+        <header class="slds-media slds-media--center slds-has-flexi-truncate">
+            <div class="slds-media__figure">
+                <ngl-icon icon="apps" category="standard"></ngl-icon>
+            </div>
+            <div class="slds-media__body slds-truncate">
+                <h2 class="slds-text-heading--large">商品类目</h2>
+            </div>
+        </header>
+    </div>
+    <div class="slds-card__body">
+        <div class="slds-card__body--inner slds-grid slds-wrap slds-grid--pull-padded">
+            <div class="slds-media__body slds-p-horizontal--small">
+                <Tree [nodes]="catNodes" [options]="options">
+                <template #treeNodeTemplate let-node="node" let-index="index">
+                <span (click)="getGoodsByCatId(node)">{{node.data.name}}</span>
+                </template>
+                <template #loadingTemplate><span class="slds-text-color--error">正在加载...</span></template>
+                </Tree>
+            </div>
+        </div>
+    </div>
+</article>

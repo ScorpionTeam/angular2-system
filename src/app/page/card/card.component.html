@@ -1,0 +1,152 @@
+<!--头部搜索-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--4-of-12">
+        <search-component [showIcon]="false" [debounce]="2000"
+                          [placeHolder]="placeholder"
+                          (searchKey)="searchByCondition($event)"></search-component>
+    </div>
+    <div class="slds-size--6-of-12">
+        <div class="slds-form-element">
+            <div class="slds-form-element__control slds-float--left">
+                <div class="slds-select_container">
+                    <select class="slds-select" [(ngModel)]="conditions.types">
+                        <option [value]="1">全部</option>
+                        <option [value]="2">优惠券</option>
+                        <option [value]="3">红包</option>
+                        <option [value]="4">每日优惠券</option>
+                        <option [value]="5">供应商红包</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="slds-form-element">
+            <div class="slds-form-element_control slds-float--left">
+                <label class="slds-form-element__label">开始时间</label>
+                <start-time-component (_startTime)="receiveStartTime($event)"
+                                      [_date_format]="_date_formate"></start-time-component>
+            </div>
+        </div>
+        <div class="slds-form-element">
+            <div class="slds-form-element_control slds-float--left">
+                <label class="slds-form-element__label">结束时间</label>
+                <start-time-component (_startTime)="receiveEndTime($event)"
+                                      [_date_format]="_date_formate"></start-time-component>
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--1-of-12">
+        <button class="slds-button slds-button--brand" (click)="search()">搜索</button>
+    </div>
+    <div class="slds-size--1-of-12">
+        <button class="slds-button slds-button--brand" (click)="createOpened=!createOpened">新增</button>
+    </div>
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="cardDataList.rows" class="slds-max-medium-table--stacked-horizontal"
+           style="margin-bottom: 10px">
+        <ngl-datatable-column heading="名称" key="name">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="发放类型" key="issue">
+            <template nglDatatableCell let-value>
+                <span class="text-success" *ngIf="value=='0'">发放</span>
+                <span class="text-info" *ngIf="value=='1'">抽取</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="状态" key="isDelete">
+            <template nglDatatableCell let-value>
+                <span class="text-success" *ngIf="value=='0'">正常</span>
+                <span class="text-danger" *ngIf="value=='1'">已作废</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="发放商家" key="sellerName">
+            <template nglDatatableCell let-value>
+                <span class="slds-truncate">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="类型" key="type">
+            <template nglDatatableCell let-value>
+                <span *ngIf="value=='1'">优惠券</span>
+                <span *ngIf="value=='2'">红包</span>
+                <span *ngIf="value=='3'">每日优惠券</span>
+                <span *ngIf="value=='4'">供应商红包</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="金额" key="balance">
+            <template nglDatatableCell let-value>
+                {{value/100|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="平台承担金额" key="platformPrice">
+            <template nglDatatableCell let-value>
+                {{value/100|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="满可用" key="sums">
+            <template nglDatatableCell let-value>
+                {{value/100|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="活动时间" key="startDay">
+            <template nglDatatableCell let-row="row">
+                {{row.startDay|date:'yyyy-MM-dd'}}至{{row.endTime|date:'yyyy-MM-dd'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="有效期" key="validDays">
+            <template nglDatatableCell let-value>{{value}}天</template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="剩余量" key="cardSurplus">
+            <template nglDatatableCell let-value>
+                <span *ngIf="value=='-1'">无限制</span>
+                <span *ngIf="value!='-1'">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作" key="">
+            <template nglDatatableCell let-row="row">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--destructive" (click)="del(row)">删除</button>
+                    <button class="slds-button slds-button--brand" (click)="edit(row)">编辑</button>
+                </div>
+            </template>
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>
+            <p class="slds-text-color--error">暂无数据...</p>
+        </template>
+    </table>
+</div>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="cardDataList.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)"
+                    previousText="上一页" nextText="下一页"></ngl-pagination>
+</div>
+
+<!--新增卡券模态-->
+<ngl-modal header="新增卡券" [(open)]="createOpened" size="large">
+    <div body>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--4-of-12">
+                <card-info-component [sellerArray]="sellerArray"></card-info-component>
+            </div>
+            <div class="slds-size--1-of-12"></div>
+            <div class="slds-size--7-of-12 slds-scrollable">
+                <seller-list-component [showBtn]="false" (refSource)="showData($event)"></seller-list-component>
+            </div>
+        </div>
+    </div>
+</ngl-modal>
+
+<!--编辑模态-->
+<ngl-modal header="卡券编辑" [(open)]="editOpned">
+    <div body>
+        <card-info-component [editObj]="currentCard"></card-info-component>
+    </div>
+</ngl-modal>
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

@@ -1,0 +1,108 @@
+<div class="slds-grid slds-wrap">
+    <div class="slds-size--3-of-12">
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <button type="button" nglButton="neutral" (click)="createCategory()">创建目录</button>
+        </div>
+        <Tree [nodes]="cateGoryArray" [options]="treeOptions">
+            <template #treeNodeTemplate let-node>
+                <span title="{{node.data.subTitle}}" (click)="getCategoryId(node)">{{ node.data.name }}</span>
+            </template>
+            <template #loadingTemplate>加载中</template>
+        </Tree>
+    </div>
+    <div class="slds-size--1-of-12"></div>
+    <div class="slds-size--8-of-12">
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <div class="slds-size--6-of-12">
+                <search-component [showIcon]="false" [debounce]="2000"
+                                  [placeHolder]="placeholder"
+                                  (searchKey)="searchByCondition($event)"></search-component>
+            </div>
+            <div class="slds-size--1-of-12"></div>
+            <div class="slds-size--4-of-12">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--neutral" (click)="createArticle()">创建文章</button>
+                    <button class="slds-button slds-button--destructive" (click)="delClick()">删除文章</button>
+                </div>
+            </div>
+        </div>
+        <div class="slds-scrollable">
+            <table ngl-datatable [data]="articleListData.rows" trackByKey="rank"
+                   class="slds-max-medium-table--stacked-horizontal">
+                <ngl-datatable-column heading="选择" key="">
+                    <template nglDatatableCell let-row="row">
+                        <ngl-form-checkbox style="display: inline-block;">
+                            <input nglFormControl type="checkbox" (click)="check(row)"/>
+                        </ngl-form-checkbox>
+                    </template>
+                </ngl-datatable-column>
+                <ngl-datatable-column heading="文章标题" key="title">
+                    <template nglDatatableCell let-value>
+                        <b>{{value}}</b>
+                    </template>
+                </ngl-datatable-column>
+                <ngl-datatable-column heading="文章关键词" key="keywords">
+                    <template nglDatatableCell let-value>
+                        <span class="text-success">{{value}}</span>
+                    </template>
+                </ngl-datatable-column>
+                <ngl-datatable-column heading="点击次数" key="lookcount">
+                    <template nglDatatableCell let-value>
+                        <span class="text-danger">{{value}}</span>
+                    </template>
+                </ngl-datatable-column>
+                <ngl-datatable-column heading="创建人" key="addUser"></ngl-datatable-column>
+                <ngl-datatable-column heading="创建时间" key="addDate"></ngl-datatable-column>
+                <ngl-datatable-column heading="操作" key="">
+                    <template nglDatatableCell let-row="row">
+                        <div class="slds-button-group" role="group">
+                            <button class="slds-button slds-button--neutral" (click)="emitObj(row)">预览</button>
+                            <button class="slds-button slds-button--brand" (click)="emitObj(row)">编辑</button>
+                        </div>
+                    </template>
+                </ngl-datatable-column>
+                <template nglNoRowsOverlay>暂无数据!</template>
+            </table>
+            <!--分页-->
+            <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+                <ngl-pagination [(page)]="pageOpts.page" [total]="articleListData.total"
+                                [perPage]="pageOpts.perPage"
+                                [limit]="pageOpts.limit"
+                                #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                                nextText="下一页"></ngl-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--目录创建模态-->
+<ngl-modal header="目录创建" [(open)]="categoryOpened">
+    <div body>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="目录名称" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="currentCategory.cateName">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="关键词" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="currentCategory.keyword">
+                </ngl-form-element>
+            </div>
+            <ngl-form-element label="目录描述" class="slds-m-top--small slds-size--1-of-1">
+                <input nglFormControl type="text" [(ngModel)]="currentCategory.description">
+            </ngl-form-element>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--brand" (click)="saveCategory()">保存</button>
+    </template>
+</ngl-modal>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

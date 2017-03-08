@@ -1,0 +1,57 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--4-of-12">
+        <search-component [showIcon]="false" [debounce]="2000"
+                          [placeHolder]="placeholder"
+                          (searchKey)="searchByCondition($event)"></search-component>
+    </div>
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="companies" class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="ID" key="id"></ngl-datatable-column>
+        <ngl-datatable-column heading="公司名称" key="companyName"></ngl-datatable-column>
+        <ngl-datatable-column heading="联系人" key="contacts"></ngl-datatable-column>
+        <ngl-datatable-column heading="联系电话" key="contactsPhone">
+            <template nglDatatableCell let-row="row">
+                <ngl-badge type="info">{{row.contactsPhone}}</ngl-badge>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="状态" key="status">
+            <template nglDatatableCell let-row="row">
+                <ngl-badge type="success" *ngIf="row.status=='0'">正常</ngl-badge>
+                <ngl-badge type="error" *ngIf="row.status=='1'">已删除</ngl-badge>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作">
+            <template nglDatatableCell let-row="row">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--brand" (click)="toEdit(row);">编辑</button>
+                    <button class="slds-button slds-button--destructive" (click)="toDelete(row);">删除</button>
+                </div>
+            </template>
+        </ngl-datatable-column>
+    </table>
+</div>
+
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="pageOpts.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="getCompanies($event)"
+                    previousText="上一页" nextText="下一页"></ngl-pagination>
+</div>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="promptMessage" [isOpen]="notificationOpen" (cancelFunction)="cancel()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+
+<!-- edit company -->
+<ngl-modal header="编辑公司" [(open)]="editorOpened">
+    <div body>
+        <company-info #companyEl [companyInput]="curOpCompany" [noBtn]="false"
+                      (postCompanyInfo)="editCompanyInfo=$event"></company-info>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="editorOpened=false;">取&nbsp;&nbsp;消</button>
+        <button class="slds-button slds-button--brand" (click)="confirmEdit(companyEl)">确&nbsp;&nbsp;定</button>
+    </template>
+</ngl-modal>

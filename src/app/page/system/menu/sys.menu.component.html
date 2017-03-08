@@ -1,0 +1,112 @@
+<div class="slds-grid slds-wrap">
+    <div class="slds-size--3-of-12">
+        <div class="slds-tree_container" role="application">
+            <ul class="slds-tree" role="tree" aria-labelledby="treeheading">
+                <li id="tree0-node1" role="treeitem" aria-level="1" aria-expanded="false"
+                    *ngFor="let sysmenu of sysMenuList">
+                    <div class="slds-tree__item">
+                        <button class="slds-button slds-button--icon slds-m-right--x-small">
+                            <ngl-icon icon="chevronright" state="selected"></ngl-icon>
+                        </button>
+                        <a tabindex="-1" role="presentation" class="slds-truncate" (click)="openChildMenu(sysmenu)">{{sysmenu.name}}</a>
+                    </div>
+                    <ul [ngClass]="{'slds-is-collapsed': sysmenu.id != currentMenuId}" role="group">
+                        <li role="treeitem" aria-level="2" *ngFor="let child of sysmenu.leaf">
+                            <div class="slds-tree__item">
+                                <button class="slds-button slds-button--icon slds-m-right--x-small">
+                                    <ngl-icon icon="chevronright" state="selected"></ngl-icon>
+                                </button>
+                                <a tabindex="-1" role="presentation" class="slds-truncate"
+                                   (click)="getCurrentMenu(child)">{{child.name}}</a></div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="slds-size--9-of-12">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--4-of-12">
+                <ngl-form-element label="菜单ID" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="currentMenuObj.id">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--1-of-12"></div>
+            <div class="slds-size--4-of-12">
+                <ngl-form-element label="菜单名称" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="currentMenuObj.name">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid">
+            <div class="slds-size--4-of-12">
+                <ngl-form-element label="上级菜单" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="currentMenuObj.pid">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--1-of-12"></div>
+            <div class="slds-size--4-of-12">
+                <ngl-form-element label="菜单地址" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="currentMenuObj.component">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid">
+            <div class="slds-size--4-of-12">
+                <ngl-form-element label="菜单图标" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="currentMenuObj.icon">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--1-of-12"></div>
+            <div class="slds-size--4-of-12">
+                <ngl-form-element label="菜单排序" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="currentMenuObj.sort">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid">
+            <div class="slds-size--4-of-12">
+                <ngl-form-element label="菜单类型" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="currentMenuObj.type">
+                        <option [value]="0">功能按钮</option>
+                        <option [value]="1">导航菜单</option>
+                        <option [value]="2">删除的菜单</option>
+                    </select>
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--1-of-12"></div>
+            <div class="slds-size--4-of-12">
+                <ngl-form-element label="是否有效" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="currentMenuObj.state">
+                        <option [value]="'是'">有效</option>
+                        <option [value]="'否'">无效</option>
+                    </select>
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid">
+            <div class="slds-size--9-of-12">
+                <ngl-form-element class="slds-m-top--small">
+                    <template nglFormLabel>菜单描述</template>
+                    <textarea nglFormControl [required]="required" [(ngModel)]="currentMenuObj.description"></textarea>
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-card__footer slds-text-align--center">
+            <div class="slds-size--9-of-12">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--brand" (click)="editMenu()">编辑</button>
+                    <button type="button" nglButton="neutral" (click)="clearMenu()">清空</button>
+                    <button class="slds-button slds-button--destructive" (click)="deleteMenu()">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

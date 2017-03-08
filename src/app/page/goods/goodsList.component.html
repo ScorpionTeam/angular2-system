@@ -1,0 +1,49 @@
+<div class="slds-size--1-of-2 slds-m-bottom--x-small">
+    <search-component (selectScope)="selectScope($event)" [showIcon]="false" [debounce]="2000"
+                      placeHolder="请输入商品名称 货号..."
+                      (searchKey)="searchByCondition($event)"></search-component>
+</div>
+<table ngl-datatable [data]="goodsList" class="slds-max-medium-table--stacked-horizontal">
+    <ngl-datatable-column heading="#" key="rank"></ngl-datatable-column>
+    <ngl-datatable-column heading="商品名称" key="title"></ngl-datatable-column>
+    <ngl-datatable-column heading="商品货号" key="goodsSn"></ngl-datatable-column>
+    <ngl-datatable-column heading="所属类目" key="cname">
+        <template nglDatatableCell let-row="row">
+            <ngl-badge type="success">{{row.cname}}</ngl-badge>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="商品图片" key="picUrl">
+        <template nglDatatableCell let-row="row">
+            <img [src]="imgUrl + row.picUrl + '?s=220x220'" alt="商品图片" style="width: 80px;height: 80px;">
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="进货价" key="recPrice"></ngl-datatable-column>
+    <ngl-datatable-column heading="售价" key="salePrice"></ngl-datatable-column>
+    <ngl-datatable-column heading="操作">
+        <template nglDatatableCell let-row="row">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--brand" (click)="toEdit(row)">编辑</button>
+                <button class="slds-button slds-button--destructive" (click)="toDelete(row)">删除</button>
+            </div>
+        </template>
+    </ngl-datatable-column>
+</table>
+<div class="slds-card__footer">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="pageOpts.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="getGoodsByCatId($event)"
+                    previousText="上一页" nextText="下一页"></ngl-pagination>
+</div>
+<!-- 删除确认对话框 -->
+<confirm-prompt-component [isOpen]="confirmBoxOpen" (cancelFunction)="close()"
+                          (confirmFunction)="confirmDel()"></confirm-prompt-component>
+
+<ngl-modal header="编辑商品" [(open)]="editorOpened">
+    <div body>
+        <goods-info #goodsInfoComponent [cat]="cat" [goodsInfoIpt]="editGoodsInfo"></goods-info>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="editorOpened=false;">取&nbsp;&nbsp;消</button>
+        <button class="slds-button slds-button--brand" (click)="confirmEdit(goodsInfoComponent)">确&nbsp;&nbsp;定</button>
+    </template>
+</ngl-modal>

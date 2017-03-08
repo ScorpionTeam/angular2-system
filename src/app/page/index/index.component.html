@@ -1,0 +1,10 @@
+<div class="container-fluid">
+    <!--左侧导航栏-->
+    <nav-left-component (parentMenu)="recieveParentMenu=$event"></nav-left-component>
+    <!--顶部导航栏-->
+    <nav-top-component></nav-top-component>
+    <!--内容入口-->
+    <div class="main" style="position: relative;margin-left: 220px;margin-top: 60px;">
+        <router-outlet></router-outlet>
+    </div>
+</div>

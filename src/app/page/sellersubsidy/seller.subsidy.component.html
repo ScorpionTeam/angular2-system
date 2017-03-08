@@ -1,0 +1,168 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--2-of-12">
+        <a [nglPopover]="tip" nglPopoverPlacement="bottom" [nglOpen]="open"
+           (mouseenter)="open = true" (mouseleave)="open = false" class="text-info"><i
+                class="fa fa-info-circle"></i><span>奖励规则</span></a>
+    </div>
+    <div class="slds-size--2-of-12">
+        <start-time-component (_startTime)="receiveDate($event)" [_date_format]="date_formate"></start-time-component>
+    </div>
+    <div class="slds-size--2-of-12">
+        <button type="button" nglButton="neutral" (click)="initData()">初始化奖励数据</button>
+    </div>
+</div>
+<!--数据列表-->
+<table ngl-datatable [data]="rewardList.rows" trackByKey="rank"
+       class="slds-max-medium-table--stacked-horizontal">
+    <ngl-datatable-column heading="店铺ID" key="sellerId"></ngl-datatable-column>
+    <ngl-datatable-column heading="店铺名称" key="name">
+        <template nglDatatableCell let-value>
+            <b>{{value}}</b>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="完成单量" key="totalCount">
+        <template nglDatatableCell let-value>
+            <ngl-badge type="error">{{value}}</ngl-badge>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="下单人数" key="peopleCount"></ngl-datatable-column>
+    <ngl-datatable-column heading="老订单量" key="oldCount"></ngl-datatable-column>
+    <ngl-datatable-column heading="首单量" key="firstCount">
+        <template nglDatatableCell let-value>
+            <span class="text-success">{{value}}</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="统计时间" key="shippingTime"></ngl-datatable-column>
+    <ngl-datatable-column heading="奖励金额" key="amount">
+        <template nglDatatableCell let-row="row">
+            <span class="text-danger">{{row.amount/100|number:'1.2-2'}}</span>
+            <button *ngIf="row.status=='0'" class="slds-button slds-button--icon-bare" (click)="modifyReward(row)">修改</button>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="实发金额" key="reward">
+        <template nglDatatableCell let-value>
+            <span class="text-success">{{value/100|number:'1.2-2'}}</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="备注" key="remark"></ngl-datatable-column>
+    <ngl-datatable-column heading="奖励发放" key="offset">
+        <template nglDatatableCell let-row="row">
+            <div *ngIf="row.status=='0'" class="slds-button-group" role="group">
+                <button class="slds-button slds-button--brand" (click)="send(row,'1')">发放</button>
+                <button class="slds-button slds-button--destructive" (click)="send(row,'2')">拒发</button>
+            </div>
+            <div *ngIf="row.status=='1'" class="slds-button-group" role="group">
+                <ngl-badge type="success">已发送</ngl-badge>
+            </div>
+            <div *ngIf="row.status=='2'" class="slds-button-group" role="group">
+                <ngl-badge type="error">拒发</ngl-badge>
+            </div>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="操作" key="操作">
+        <template nglDatatableCell let-row="row">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" (click)="detail(row)">详情</button>
+            </div>
+        </template>
+    </ngl-datatable-column>
+
+    <!-- Loading overlay -->
+    <template nglLoadingOverlay>
+        <div class="slds-box slds-box--small slds-theme--shade slds-text-align--center">Loading...</div>
+    </template>
+
+    <!-- No rows overlay -->
+    <template nglNoRowsOverlay>暂无数据</template>
+</table>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="rewardList.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+
+<!--tips-->
+<template #tip>
+    <div class="slds-text-title--caps">
+        <strong>下单定义：商品金额>1的完成订单</strong>
+    </div>
+    <div class="slds-text-longform">
+        <ul>
+            <li>(新用户下单人数*1)小于等于该店的奖励上限时，当日奖励金额等于(新用户下单人数*1)</li>
+            <li>(新用户下单人数*1)大于该店的奖励上限时，当日奖励金额等于奖励上限</li>
+        </ul>
+    </div>
+</template>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="promptMessage" [isOpen]="notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toastType" [toastMessage]="toastMessage"
+                 [showAlert]="showAlert"></toast-component>
+
+<!--奖励修改模态-->
+<ngl-modal header="奖励设置" [(open)]="rewardOpend" class="small-modal">
+    <div body>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <ngl-form-element label="奖励金额" class="slds-m-top--small">
+                    <input nglFormControl type="number" [required]="required" [(ngModel)]="rewardModalObj.reward">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--1-of-1">
+                <ngl-form-element label="备注" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="rewardModalObj.remark">
+                </ngl-form-element>
+            </div>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="closeModal()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="saveReward(1)">发送</button>
+    </template>
+</ngl-modal>
+
+<!--奖励订单详情模态-->
+<ngl-modal header="订单列表" [(open)]="orderOpened">
+    <div body>
+        <div class="slds-scrollable">
+            <table ngl-datatable [data]="orderDataList.rows" trackByKey="rank"
+                   class="slds-max-medium-table--stacked-horizontal">
+                <ngl-datatable-column heading="用户名称" key="consignee"></ngl-datatable-column>
+                <ngl-datatable-column heading="手机号" key="mobile"></ngl-datatable-column>
+                <ngl-datatable-column heading="订单ID" key="order_sn">
+                    <template nglDatatableCell let-value>
+                        <b>{{value}}</b>
+                    </template>
+                </ngl-datatable-column>
+                <ngl-datatable-column heading="订单金额" key="order_amount">
+                    <template nglDatatableCell let-value>
+                        <span class="text-danger">{{value/100|number:'1.2-2'}}</span>
+                    </template>
+                </ngl-datatable-column>
+                <ngl-datatable-column heading="是否首单" key="first_order_count">
+                    <template nglDatatableCell let-value>
+                        <ngl-badge *ngIf="value=='0'" type="error">非首单</ngl-badge>
+                        <ngl-badge *ngIf="value=='1'" type="error">首单</ngl-badge>
+                    </template>
+                </ngl-datatable-column>
+                <!-- No rows overlay -->
+                <template nglNoRowsOverlay>暂无数据</template>
+            </table>
+            <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+                <ngl-pagination [(page)]="orderPageOpts.page" [total]="orderDataList.total"
+                                [perPage]="orderPageOpts.perPage"
+                                [limit]="orderPageOpts.limit"
+                                boundaryNumbers="1" #pagination (pageChange)="orderPageChange($event)"
+                                previousText="上一页"
+                                nextText="下一页"></ngl-pagination>
+            </div>
+        </div>
+    </div>
+</ngl-modal>

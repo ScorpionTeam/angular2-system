@@ -1,0 +1,15 @@
+<!--头部进度条-->
+<recruit-header [wriInfoStatus]="wriInfoStatus" [relativeSellerInfoStatus]="relativeSellerInfoStatus" [wriPublishTimeStatus]="wriPublishTimeStatus"></recruit-header>
+<!--店铺列表-->
+<seller-list-component [showBtn]="false" (refSource)="relationSeller($event)"></seller-list-component>
+<div class="slds-grid slds-wrap">
+    <div class="slds-size--1-of-1 slds-align--absolute-center">
+        <a class="slds-button slds-button--neutral" [routerLink]="['../../hng-recruit-basic/',recruitId]">上一步</a>
+        <a *ngIf="recruitId!=0&&showSavBtn" class="slds-button slds-button--brand" [routerLink]="['../../recruit-date/',recruitId]">下一步</a>
+        <button *ngIf="recruitId==0||!showSavBtn" class="slds-button slds-button--brand" (click)="saveData()">保存</button>
+    </div>
+</div>
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

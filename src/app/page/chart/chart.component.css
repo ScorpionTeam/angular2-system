@@ -1,0 +1,52 @@
+.row .col-md-3 .wrap0 {
+    background: #3598dc;
+    padding: 20px;
+}
+
+.row .col-md-3 .wrap1 {
+    background: #e7505a;
+    padding: 20px;
+}
+
+.row .col-md-3 .wrap2 {
+    background: #3598dc;
+    padding: 20px;
+}
+
+.row .col-md-3 .wrap3 {
+    background: #8E44AD;
+    padding: 20px;
+}
+
+.row .col-md-3 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.row .col-md-3 .wrap .wrap-thumb .wrap-txt {
+    color: #fff;
+    font-weight: 700;
+    font-size: 22px;
+    padding-left: 20px;
+}
+
+.wrap-thumb {
+    color: #fff;
+}
+
+.wrap-txt {
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.row .col-md-3 div h4 {
+    font-weight: 700;
+    font-size: 14px;
+    color: #fff;
+    margin: 0 0 20px;
+}
+
+.hl-map {
+    height: 600px;
+    background: darkslategrey;
+}

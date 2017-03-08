@@ -1,0 +1,92 @@
+<div class="slds-size--1-of-1 slds-grid">
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="卡券名称" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="editObj.name">
+        </ngl-form-element>
+    </div>
+    <div class="slds-size--2-of-12"></div>
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="卡券金额" class="slds-m-top--small">
+            <input nglFormControl type="number" [required]="required" [(ngModel)]="editObj.balanceStr">
+        </ngl-form-element>
+    </div>
+</div>
+<div class="slds-size--1-of-1 slds-grid">
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="卡券数量" class="slds-m-top--small">
+            <input nglFormControl type="number" [required]="required" [(ngModel)]="editObj.cardNumLimit">
+        </ngl-form-element>
+    </div>
+    <div class="slds-size--2-of-12"></div>
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="卡券类型" class="slds-m-top--small">
+            <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="editObj.type">
+                <option [value]="1">优惠券</option>
+                <option [value]="2">红包</option>
+                <option [value]="3">每日优惠券</option>
+                <option [value]="4">供应商红包</option>
+            </select>
+        </ngl-form-element>
+    </div>
+</div>
+<div class="slds-size--1-of-1 slds-grid">
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="抽取类型" class="slds-m-top--small">
+            <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="editObj.issue">
+                <option [value]="0">无</option>
+                <option [value]="1">抽取</option>
+            </select>
+        </ngl-form-element>
+    </div>
+    <div class="slds-size--2-of-12"></div>
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="使用范围" class="slds-m-top--small">
+            <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="editObj.sellerItems">
+                <option [value]="0">部分商家</option>
+                <option [value]="1">全部商家</option>
+            </select>
+        </ngl-form-element>
+    </div>
+</div>
+<div class="slds-size--1-of-1 slds-grid">
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="开始时间" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="editObj.startDay">
+        </ngl-form-element>
+    </div>
+    <div class="slds-size--2-of-12"></div>
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="结束时间" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="editObj.endTime">
+        </ngl-form-element>
+    </div>
+</div>
+<div class="slds-size--1-of-1 slds-grid">
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="满可用" class="slds-m-top--small">
+            <input nglFormControl type="number" [required]="required" [(ngModel)]="editObj.sumsStr">
+        </ngl-form-element>
+    </div>
+    <div class="slds-size--2-of-12"></div>
+    <div class="slds-size--5-of-12">
+        <ngl-form-element label="有效期" class="slds-m-top--small">
+            <input nglFormControl type="text" [required]="required" [(ngModel)]="editObj.validDays">
+        </ngl-form-element>
+    </div>
+</div>
+<ngl-form-element label="卡券说明" class="slds-m-top--small">
+    <input nglFormControl type="text" [(ngModel)]="editObj.content">
+</ngl-form-element>
+<ngl-form-element label="平台承担金额" class="slds-m-top--small">
+    <input nglFormControl type="number" [required]="required" [(ngModel)]="editObj.platformPriceStr">
+</ngl-form-element>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none">
+    <div class="slds-align--absolute-center">
+        <button class="slds-button slds-button--brand" (click)="saveCard()">保存</button>
+    </div>
+</div>
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>
+

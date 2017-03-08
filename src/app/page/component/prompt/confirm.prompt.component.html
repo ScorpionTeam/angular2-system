@@ -1,0 +1,24 @@
+<!--Notification-->
+<div *ngIf="isOpen" class="demo-only" style="height:640px;">
+    <div role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container" style="width: 20%">
+            <div class="slds-modal__content slds-modal__menu">
+                <div class="slds-align--absolute-center">
+                    <ngl-icon size="large" [icon]="icon" [category]="category"></ngl-icon>
+                </div>
+                <div class="slds-text-align--center slds-text-title slds-m-around--medium">
+                    {{promptMessage}}
+                </div>
+                <div class="slds-align--absolute-center">
+                    <button class="slds-button slds-button--neutral" style="width: 40%;margin: .2rem;"
+                            (click)="confirm()">确认
+                    </button>
+                    <button class="slds-button slds-button--neutral" style="width: 40%;margin: .2rem;"
+                            (click)="cancel()">取消
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-backdrop slds-backdrop--open"></div>
+</div>

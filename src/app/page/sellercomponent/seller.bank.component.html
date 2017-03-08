@@ -1,0 +1,144 @@
+<!--账户信息-->
+<div *ngFor="let a of userList">
+    <div class="slds-box">
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label slds-float--left">管理员:</span>
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static" style="line-height: 0;">{{a.name}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label slds-float--left">账号:</span>
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static" style="line-height: 0">{{a.account}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-2 slds-align--absolute-center" style="padding-top: 20px;">
+                <button class="slds-button slds-button--brand" (click)="updateAccount(a)">更换账户</button>
+                <button class="slds-button slds-button--neutral" (click)="resetPassword(a,'update-pwd')">重置密码</button>
+            </div>
+        </div>
+    </div>
+    <!--银行卡编辑窗口-->
+    <div class="slds-box" *ngIf="a.billInfo.acctNo==null||openEdit" style="margin-top: 20px;">
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="卡号" class="slds-m-top--small">
+                    <input nglFormControl type="number" [(ngModel)]="bankObj.acctNo" required="required">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="银行" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [(ngModel)]="bankObj.orgCode" required="required">
+                        <option *ngFor="let b of bankList" [value]="b.id">{{b.text}}:{{b.id}}</option>
+                    </select>
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="所在支行" class="slds-m-top--small">
+                    <input nglFormControl type="text" [(ngModel)]="bankObj.brabankName" required="required">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="持卡人姓名" class="slds-m-top--small">
+                    <input nglFormControl type="text" [(ngModel)]="bankObj.acctName" required="required">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="持卡人手机号" class="slds-m-top--small">
+                    <input nglFormControl type="text" [(ngModel)]="currentObj.mobile" required="required">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-2 slds-align--absolute-center">
+                <button class="slds-button slds-button--brand" (click)="saveBank(a)">保存</button>
+                <button class="slds-button slds-button--neutral" (click)="openEdit=!openEdit">取消</button>
+            </div>
+        </div>
+    </div>
+    <!--银行卡详情-->
+    <div class="slds-box" style="margin-top: 20px;" *ngIf="a.billInfo.acctNo!=null&&!openEdit">
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--1-of-1">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label slds-float--left">新云联账户:</span>
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static" style="line-height: 0">{{a.personInfo.mobile}}-{{a.personInfo.loginId}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label slds-float--left">卡号:</span>
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static" style="line-height: 0">{{a.billInfo.acctNo}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label slds-float--left">银行:</span>
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static" style="line-height: 0">{{a.billInfo.cityCode}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label slds-float--left">支行:</span>
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static" style="line-height: 0">{{a.billInfo.brabankName}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label slds-float--left">持卡人姓名:</span>
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static" style="line-height: 0">{{a.billInfo.acctName}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label slds-float--left">手机号:</span>
+                    <div class="slds-form-element__control">
+                        <span class="slds-form-element__static" style="line-height: 0">{{a.mobile}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-2 slds-align--absolute-center">
+                <button class="slds-button slds-button--neutral" (click)="updateBank(a)">修改银行卡信息</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--更换账号-->
+<ngl-modal [(open)]="editAccountOpened">
+    <div body>
+        <div class="slds-publisher slds-publisher--discussion">
+            <textarea id="comment-text-input2" class="slds-publisher__input slds-textarea slds-text-longform"
+                      placeholder="账号" [(ngModel)]="currentObj.account"></textarea>
+            <div class="slds-publisher__actions slds-grid slds-grid--align-spread">
+                <button class="slds-button slds-button--brand" (click)="resetPassword(currentObj,'change-user')">save</button>
+                <button class="slds-button slds-button--neutral" (click)="cancel()">cancel</button>
+            </div>
+        </div>
+    </div>
+</ngl-modal>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

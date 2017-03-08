@@ -1,0 +1,158 @@
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="spikeArray" trackByKey="rank"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="名称" key="title">
+            <template nglDatatableCell let-value>
+                <ngl-badge type="info">{{value}}</ngl-badge>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="店铺ID" key="sellerId"></ngl-datatable-column>
+        <ngl-datatable-column heading="店铺名称" key="sellerName">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="价格" key="salePrice">
+            <template nglDatatableCell let-value>
+                {{value/100|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="秒杀价" key="priceRole">
+            <template nglDatatableCell let-value>
+                <ngl-badge type="error">{{value/100|number:'1.2-2'}}</ngl-badge>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="开始时间" key="startTime">
+            <template nglDatatableCell let-value>
+                <span class="text-success">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="结束时间" key="endTime">
+            <template nglDatatableCell let-value>
+                <span class="text-success">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="库存" key="defaultCount">
+            <template nglDatatableCell let-value>
+                <span class="text-danger">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="剩余库存" key="totalCount">
+            <template nglDatatableCell let-value>
+                <span class="text-danger">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作" key="">
+            <template nglDatatableCell let-row="row">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--brand" (click)="edit(row)">编辑</button>
+                    <button class="slds-button slds-button--destructive" (click)="delSpike(row)">删除</button>
+                </div>
+            </template>
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+
+<!--编辑模态-->
+<ngl-modal [(open)]="opened">
+    <div body>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1 slds-align--absolute-center">
+                <img [src]="commonImgUrl+operaObj.picUrl+'?s=220x220'" alt="图片" style="width: 50%;height: 100px;">
+            </div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">商品ID</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.id}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-form-element">
+                <span class="slds-form-element__label">商品标准ID</span>
+                <div class="slds-form-element__control slds-has-divider--bottom">
+                    <span class="slds-form-element__static text-success">{{operaObj.baseGoodsId}}</span>
+                </div>
+            </div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">商品销量</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.saleVolume}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">商品原价</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.salePrice/100|number:'1.2-2'}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">供应商ID</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.sellerId}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">供应商名称</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.sellerName}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--6-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">默认库存</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.defaultCount}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="剩余库存" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaObj.totalCount">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="秒杀价" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaObj.priceRole">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="开始时间" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaObj.startTime">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="结束时间" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaObj.endTime">
+                </ngl-form-element>
+            </div>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="cancel()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="confirmEdit()">编辑</button>
+    </template>
+</ngl-modal>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>
+

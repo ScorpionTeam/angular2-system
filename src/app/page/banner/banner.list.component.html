@@ -1,0 +1,118 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <search-component [showIcon]="false" [debounce]="2000" [placeHolder]="placeholder"
+                      (searchKey)="searchByCondition($event)"></search-component>
+    <div class="slds-size--2-of-12">
+        <button class="slds-button slds-button--neutral" (click)="createOpened=!createOpened;operaObj={}">创建</button>
+    </div>
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="bannerList.rows" trackByKey="id"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="名称" key="bannerName" sortable></ngl-datatable-column>
+        <ngl-datatable-column heading="图片" key="imgUrl">
+            <template nglDatatableCell let-row="row">
+                <a [href]="row.url" target="blank">
+                    <img [src]="commonImgUrl+row.imgUrl" width="100" height="100" class="img-thumbnail">
+                </a>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="作用范围" key="scopeSeller">
+            <template nglDatatableCell let-value>
+                <span>{{value=='all'|threeElementExpression:'全部;部分'}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="类型" key="bannerType">
+            <template nglDatatableCell let-value>
+                <span>{{value=='seller'|threeElementExpression:'商户端;用户端'}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="所属区域" key="city"></ngl-datatable-column>
+        <ngl-datatable-column heading="开始时间" key="startTime"></ngl-datatable-column>
+        <ngl-datatable-column heading="结束时间" key="endTime"></ngl-datatable-column>
+        <ngl-datatable-column heading="创建时间" key="addTime">
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作" key="">
+            <template nglDatatableCell let-row="row">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--destructive" (click)="delConfirm(row)">删除</button>
+                </div>
+            </template>
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+<!--footer-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="bannerList.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen"
+                          (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType"
+                 [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>
+
+<!--新增模态-->
+<ngl-modal header="Banner新增" [(open)]="createOpened" size="large">
+    <div body>
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--4-of-12">
+                <ngl-form-element label="名称" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaObj.bannerName">
+                </ngl-form-element>
+                <ngl-form-element label="类型" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="operaObj.bannerType">
+                        <option [value]="'user'">用户端</option>
+                        <option [value]="'seller'">商户端</option>
+                    </select>
+                </ngl-form-element>
+                <ngl-form-element label="商家范围" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="operaObj.scopeSeller">
+                        <option [value]="'all'">全部商家</option>
+                        <option [value]="'part'">部分商家</option>
+                    </select>
+                </ngl-form-element>
+                <div class="slds-size--2-of-2 slds-wrap slds-grid" style="margin-top: 20px;">
+                    <div class="slds-size--1-of-2">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">开始</label>
+                            <start-time-component (_startTime)="receiveStartDate($event)"
+                                                  [_date_format]="_date_formate"></start-time-component>
+                        </div>
+                    </div>
+                    <div class="slds-size--1-of-2">
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label">结束</label>
+                            <start-time-component (_startTime)="receiveEndDate($event)"
+                                                  [_date_format]="_date_formate"></start-time-component>
+                        </div>
+                    </div>
+                </div>
+                <ngl-form-element label="链接" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaObj.url">
+                </ngl-form-element>
+                <ngl-form-element label="权重" class="slds-m-top--small">
+                    <input nglFormControl type="number" [required]="required" [(ngModel)]="operaObj.sort">
+                </ngl-form-element>
+                <div class="slds-size--1-of-1">
+                    <img-upload-component [uploadFolder]="uploadFolder"
+                                          (uploadAddr)="picUrl=$event"></img-upload-component>
+                </div>
+            </div>
+            <div class="slds-size--1-of-12"></div>
+            <div class="slds-size--7-of-12">
+                <seller-list-component (refSource)="sellerList=$event" [showBtn]="false"></seller-list-component>
+            </div>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="createOpened=!createOpened">取消</button>
+        <button class="slds-button slds-button--brand" (click)="saveBanner()">保存</button>
+    </template>
+</ngl-modal>

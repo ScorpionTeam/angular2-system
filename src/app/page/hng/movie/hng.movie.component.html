@@ -1,0 +1,8 @@
+<ngl-tabs [(selected)]="selected">
+    <template ngl-tab heading="活动列表" nglTabId="list">
+        <hng-movie-list-component (outPutCurrentActive)="getActive($event)"></hng-movie-list-component>
+    </template>
+    <template ngl-tab heading="活动录入" nglTabId="entry">
+        <hng-movie-entry-component [currentActiveObj]="currentActiveObj"></hng-movie-entry-component>
+    </template>
+</ngl-tabs>

@@ -1,0 +1,9 @@
+<ngl-tabs [(selected)]="selected">
+    <template ngl-tab heading="招聘" nglTabId="list">
+        <hng-recruit-list-component (tabSelect)="selected=$event" (currentRecruit)="currentRecruit=$event"></hng-recruit-list-component>
+    </template>
+    <template ngl-tab heading="统计" nglTabId="statics">
+        <hng-recruit-statics-component [recruitObj]="currentRecruit"></hng-recruit-statics-component>
+    </template>
+</ngl-tabs>
+

@@ -1,0 +1,22 @@
+.setting-tip li {
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+.nav-item .nav-link {
+    padding: 6px 0;
+    color: #2d2a2a;
+}
+
+.nav-item .nav-link:hover {
+    padding: 6px 0;
+    color: #2d2a2a;
+}
+
+.navbar-brand {
+    color: #2d2a2a;
+}
+
+.navbar-brand:hover {
+    color: #2d2a2a;
+}

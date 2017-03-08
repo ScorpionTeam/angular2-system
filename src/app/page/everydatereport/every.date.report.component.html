@@ -1,0 +1,150 @@
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--1-of-12">
+        <a [nglPopover]="tip" nglPopoverPlacement="bottom" [nglOpen]="open"
+           (mouseenter)="open = true" (mouseleave)="open = false" class="text-info"><i
+                class="fa fa-info-circle"></i><span>信息</span></a>
+    </div>
+    <div class="slds-size--2-of-12">
+        <start-time-component (_startTime)="receiveDate($event)" [_date_format]="_date_formate"></start-time-component>
+    </div>
+    <div class="slds-size--2-of-12">
+        <button class="slds-button slds-button--neutral" (click)="exportDataReport()">Excel导出</button>
+    </div>
+</div>
+<div class="slds-grid slds-wrap slds-scrollable">
+    <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+        <thead>
+        <tr class="slds-text-title--caps">
+            <th scope="col" colspan="7" class="slds-theme--info">
+                <div class="slds-truncate slds-align--absolute-center">交易数据</div>
+            </th>
+            <th scope="col" colspan="4" class="slds-theme--inverse">
+                <div class="slds-truncate slds-align--absolute-center">商户数据</div>
+            </th>
+            <th scope="col" colspan="4" class="slds-theme--success">
+                <div class="slds-truncate slds-align--absolute-center">用户数据</div>
+            </th>
+        </tr>
+        <tr class="slds-text-title--caps">
+            <th scope="col">
+                <div class="slds-truncate">日期</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">订单数</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">销售额</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">下单人数</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">客单价</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">红包金额</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">奖励金额</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">上线商户数</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">开单商户数</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">下单商户数</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">活跃商户数</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">累计注册用户数</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">当日注册用户数</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">累计下单用户数</div>
+            </th>
+            <th scope="col">
+                <div class="slds-truncate">当日下单新用户数</div>
+            </th>
+        </tr>
+        <tr class="slds-text-title--caps">
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.date}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.orderNum}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.saleAmount}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.dayPayUser}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.userAvgPay}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.redPackageAmount}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.rewardAmount}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.onlineSellerCount}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.billingSellerCount}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.activeSellerCOunt}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.dayPaySellerNum}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.totalUser}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.oneDayUserNum}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.totalPayUser}}</div>
+            </td>
+            <td data-label="Close Date">
+                <div class="slds-truncate">{{everyDateReport.oneDayPayUserNum}}</div>
+            </td>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+
+<!--tips-->
+<template #tip>
+    <div class="slds-text-title--caps">
+        <strong>所有描述中“订单”指代:商品金额>1的完成订单</strong>
+    </div>
+    <div class="slds-text-longform">
+        <ul>
+            <li>客单价:销售额/订单数</li>
+            <li>红包金额:指当日完成订单中所有不含配送费的优惠金额总和</li>
+            <li>奖励金额:指当日发出的所有奖励金额,不扣除冲账</li>
+            <li>销售额:订单金额(商品金额+运费金额)</li>
+            <li>上线商户数:当日通过审核(非物料审核)的商户数</li>
+            <li>开单商户数:当日完成第一笔1笔及以上订单的商户数</li>
+            <li>活跃商户数:距离当日的30天内，完成5笔及以上订单的商户数</li>
+        </ul>
+    </div>
+</template>
+
+
+<!--Toast提示-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toastType" [toastMessage]="toastMessage"
+                 [showAlert]="showAlert"></toast-component>

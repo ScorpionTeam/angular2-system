@@ -1,0 +1,38 @@
+<!--头部进度条-->
+<recruit-header [wriInfoStatus]="wriInfoStatus" [relativeSellerInfoStatus]="relativeSellerInfoStatus"
+                [wriPublishTimeStatus]="wriPublishTimeStatus"></recruit-header>
+
+<div class="slds-grid slds-wrap" style="margin-top: 40px;">
+    <div class="slds-size--3-of-12"></div>
+    <div class="slds-size--6-of-12">
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--6-of-12">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label">开始时间</label>
+                    <start-time-component (_startTime)="receiveStartDate($event)"
+                                          [_date_format]="_date_formate"></start-time-component>
+                </div>
+            </div>
+            <div class="slds-size--6-of-12">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label">结束时间</label>
+                    <start-time-component (_startTime)="receiveEndDate($event)"
+                                          [_date_format]="_date_formate"></start-time-component>
+                </div>
+            </div>
+        </div>
+        <div class="slds-size--1-of-1 slds-align--absolute-center" style="margin-top: 40px;">
+            <div class="slds-size--3-of-12"></div>
+            <div class="slds-size--6-of-12">
+                <a [routerLink]="['../../recruit-seller/',recruitId]" class="slds-button slds-button--neutral">上一步</a>
+                <button class="slds-button slds-button--brand" (click)="saveData()">保存</button>
+            </div>
+            <div class="slds-size--3-of-12"></div>
+        </div>
+    </div>
+    <div class="slds-size--3-of-12"></div>
+</div>
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

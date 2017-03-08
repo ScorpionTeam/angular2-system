@@ -1,0 +1,155 @@
+<!--头部搜索-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <search-component (selectScope)="selectScope($event)" [showIcon]="false" [debounce]="2000"
+                      [placeHolder]="placeholder"
+                      (searchKey)="searchByCondition($event)"></search-component>
+    <div class="slds-size--10-of-12">
+        <div class="slds-form-element">
+            <div class="slds-form-element__control slds-float--left">
+                <div class="slds-select_container">
+                    <select class="slds-select" [(ngModel)]="orderReq.orderStatus">
+                        <option value="no_pay">未付款</option>
+                        <option value="have_pay">已付款</option>
+                        <option value="shipping">派送中</option>
+                        <option value="shipping_done">派送完成</option>
+                        <option value="wait_take">待自提</option>
+                        <option value="have_done">已完成</option>
+                        <option value="return_goods">已退货</option>
+                        <option value="cancel">已取消</option>
+                        <option value="close">已关闭</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="slds-form-element">
+            <div class="slds-form-element__control slds-float--left">
+                <div class="slds-select_container">
+                    <select class="slds-select" [(ngModel)]="orderReq.orderType">
+                        <option [value]="1">实时单</option>
+                        <option [value]="2">预约单</option>
+                        <option [value]="3">代客单</option>
+                        <option [value]="4">村淘单</option>
+                        <option [value]="5">扫码单</option>
+                        <option [value]="6">赊销单</option>
+                        <option [value]="7">秒杀单</option>
+                        <option [value]="8">新掌柜</option>
+                        <option value="first">首单</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="slds-form-element">
+            <div class="slds-form-element_control slds-float--left" style="padding-left: 20px;">
+                <label class="slds-form-element__label" >开始时间</label>
+                <start-time-component (_startTime)="receiveDate($event)" [_date_format]="_date_formate"></start-time-component>
+            </div>
+        </div>
+        <div class="slds-form-element">
+            <div class="slds-form-element_control slds-float--left" style="padding-left: 20px;">
+                <label class="slds-form-element__label" >结束时间</label>
+                <start-time-component (_startTime)="receiveEndTime($event)" [_date_format]="_date_formate"></start-time-component>
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--4-of-12">
+        <button type="button" nglButton="neutral" (click)="exportOrder()">导出订单</button>
+        <button type="button" nglButton="neutral" (click)="search()">搜索</button>
+    </div>
+
+</div>
+<!--数据列表-->
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="orderList" class="slds-max-medium-table--stacked-horizontal"
+           style="margin-bottom: 10px">
+        <ngl-datatable-column heading="#" key="rank"></ngl-datatable-column>
+        <ngl-datatable-column heading="订单编号" key="orderSn">
+            <template nglDatatableCell let-row="row">
+                <b>{{row.orderSn}}</b>
+                <ngl-badge type="error" *ngIf="row.isFirst == 0">{{row.isFirstStr}}</ngl-badge>
+                <ngl-badge type="success" *ngIf="row.isFirst == 1">{{row.isFirstStr}}</ngl-badge>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="店铺名称" key="sellerName"></ngl-datatable-column>
+        <ngl-datatable-column heading="收货人电话" key="mobile">
+            <template nglDatatableCell let-row="row">
+                <ngl-badge type="info">{{row.mobile}}</ngl-badge>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="商品金额" key="goodAmount">
+            <template nglDatatableCell let-value>
+                {{value|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="运费金额" key="shippingAmount">
+            <template nglDatatableCell let-value>
+                {{value|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="优惠金额" key="discountAmount">
+            <template nglDatatableCell let-value>
+                {{value|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="订单金额" key="orderAmount">
+            <template nglDatatableCell let-value>
+                {{value|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <!--<ngl-datatable- column heading="支付金额" key="payAmount"></ngl-datatable-column>-->
+        <ngl-datatable-column heading="付款日期" key="payTime"></ngl-datatable-column>
+        <!--<ngl-datatable-column heading="完成日期" key="shippingTime"></ngl-datatable-column>-->
+        <ngl-datatable-column heading="订单状态" key="orderStatusStr">
+            <template nglDatatableCell let-row="row">
+                <ngl-badge type="success" *ngIf="row.orderStatus == 'have_done'">{{row.orderStatusStr}}</ngl-badge>
+                <ngl-badge type="warning" *ngIf="row.orderStatus != 'have_done'">{{row.orderStatusStr}}</ngl-badge>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="订单类型" key="orderTypeStr">
+            <template nglDatatableCell let-value>
+                <span class="text-success">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作">
+            <template nglDatatableCell let-row="row">
+                <button class="slds-button slds-button--brand slds-button--small" (click)="showDetail(row)">详情
+                </button>
+            </template>
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>
+            <p class="slds-text-color--error">暂无数据...</p>
+        </template>
+    </table>
+</div>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="pageOpts.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="getOrderList($event)"
+                    previousText="上一页" nextText="下一页"></ngl-pagination>
+</div>
+
+<ngl-modal header="订单详情" [(open)]="opened" size="large">
+    <div body *ngIf="curOrder">
+        <ngl-tabs [(selected)]="selectedTab">
+            <template ngl-tab heading="基本信息" nglTabId="orderBasic">
+                <order-basic [orderBasic]="curOrder" [orderGoods]="orderGoods"></order-basic>
+            </template>
+            <template ngl-tab heading="订单日志" nglTabId="orderLog">
+                <order-log [orderLog]="orderLog"></order-log>
+            </template>
+            <template ngl-tab heading="店铺信息" nglTabId="sellerInfo">
+                <seller-combination-component [currentSeller]="sellerObj"
+                                              [showBtn]="showBtn"></seller-combination-component>
+            </template>
+            <template ngl-tab heading="退款处理" nglTabId="refundOrder">
+                <refund-order-component [currentOrder]="curOrder"></refund-order-component>
+            </template>
+        </ngl-tabs>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="opened=false;">关闭</button>
+    </template>
+</ngl-modal>
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

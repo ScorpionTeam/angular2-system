@@ -1,0 +1,125 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--3-of-12">
+        <search-component [showIcon]="false" [debounce]="2000"
+                          [placeHolder]="placeholder"
+                          (searchKey)="searchByCondition($event)"></search-component>
+    </div>
+    <div class="slds-size--2-of-12">
+        <button type="button" nglButton="neutral" (click)="roleModalOpened=!roleModalOpened;">新增</button>
+    </div>
+</div>
+<!--角色列表-->
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="roleList.rows" trackByKey="rank"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="ID" key="id"></ngl-datatable-column>
+        <ngl-datatable-column heading="角色名称" key="roleName">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="创建时间" key="addTime">
+            <template nglDatatableCell let-value>
+                <span class="text-success">{{value|date:'yyyy-MM-dd HH:mm:ss'}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="角色状态" key="state">
+            <template nglDatatableCell let-value>
+                <span class="text-info" *ngIf="value=='1'">启用</span>
+                <span class="text-danger" *ngIf="value=='0'">禁用</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="修改时间" key="updateTime">
+            <template nglDatatableCell let-value>
+                <span class="text-success">{{value|date:'yyyy-MM-dd HH:mm:ss'}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作" key="">
+            <template nglDatatableCell let-row="row">
+                <div class="slds-button-group" role="group">
+                    <!--<button type="button" nglButton="neutral" (click)="roleDetail()">详情</button>-->
+                    <button class="slds-button slds-button--brand" (click)="grantAuthorization(row)">授权</button>
+                    <button class="slds-button slds-button--destructive" (click)="delete(row)">删除</button>
+                </div>
+            </template>
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+<!--底部分页-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="roleList.total" [perPage]="roleList.size"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+<!--授权模态-->
+<ngl-modal header="角色授权" [(open)]="authorOpen">
+    <div body class="slds-grid slds-picklist--draggable">
+        <div class="slds-size--1-of-12"></div>
+        <div class="slds-form-element">
+            <span class="slds-form-element__label">菜单列表</span>
+            <div class="slds-picklist" role="application">
+                <ul aria-describedby="option-drag-label" aria-multiselectable="true"
+                    class="slds-picklist__options slds-picklist__options--multi" role="listbox" tabindex="0">
+                    <li aria-selected="false" class="slds-picklist__item slds-is-draggable" draggable="true"
+                        role="option" tabindex="-1" *ngFor="let m of authorizationMapResullt.menuList"
+                        [ngClass]="{'text-danger':  m.id === leftPoint.id}" (click)="leftPoint=m;">
+                        <span class="slds-truncate">{{m.name}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid--vertical slds-grid--align-center">
+            <button class="slds-button slds-button--icon-container" title="Up" (click)="pullRight()">
+                <svg class="slds-button__icon" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                         xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#right"></use>
+                </svg>
+            </button>
+            <button class="slds-button slds-button--icon-container" title="Down" (click)="pullLeft()">
+                <svg class="slds-button__icon" aria-hidden="true">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink"
+                         xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#left"></use>
+                </svg>
+            </button>
+        </div>
+        <div class="slds-form-element">
+            <span class="slds-form-element__label">已授权菜单</span>
+            <div class="slds-picklist" role="application">
+                <ul aria-describedby="option-drag-label" aria-multiselectable="true"
+                    class="slds-picklist__options slds-picklist__options--multi" role="listbox" tabindex="0">
+                    <li aria-selected="false" class="slds-picklist__item slds-is-draggable" draggable="true"
+                        role="option" tabindex="-1" *ngFor="let au of authorizationMapResullt.authorizationMenu"
+                        [ngClass]="{'text-danger': au.id===rightPoint.id}" (click)="rightPoint=au;">
+                        <span class="slds-truncate">{{au.name}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="closeModal()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="saveAuthorization()">保存</button>
+    </template>
+</ngl-modal>
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>
+
+<!--新增角色模态-->
+<ngl-modal [(open)]="roleModalOpened">
+    <div body>
+        <div class="slds-publisher slds-publisher--discussion">
+            <textarea id="comment-text-input2" class="slds-publisher__input slds-textarea slds-text-longform"
+                      placeholder="角色名称…" [(ngModel)]="roleObj.roleName"></textarea>
+            <div class="slds-publisher__actions slds-grid slds-grid--align-spread">
+                <button class="slds-button slds-button--brand" (click)="createRole()">save</button>
+            </div>
+        </div>
+    </div>
+</ngl-modal>

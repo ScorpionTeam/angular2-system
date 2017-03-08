@@ -1,0 +1,94 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--4-of-12" style="background: #fff">
+        <search-component [showIcon]="openConditionIcon" [debounce]="debounce" [placeHolder]="placeholder"
+                          (searchKey)="searchByCondition($event)"></search-component>
+    </div>
+</div>
+<table ngl-datatable [data]="sellerList.rows" trackByKey="rank"
+       (onRowClick)="onRowClick($event)"
+       class="slds-max-medium-table--stacked-horizontal">
+    <ngl-datatable-column heading="选择" key="" *ngIf="openCheckBox">
+        <template nglDatatableCell let-row="row">
+            <ngl-form-checkbox style="display: inline-block;">
+                <input nglFormControl type="checkbox" (click)="emitMethod(row)"/>
+            </ngl-form-checkbox>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="ID" key="id" sortable></ngl-datatable-column>
+    <ngl-datatable-column heading="名称" key="name" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="地址" key="address" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="店铺状态" key="isDelete" cellClass="slds-truncate">
+        <template nglDatatableCell let-value>
+            <span *ngIf="value=='0'" class="text-success">正常</span>
+            <span *ngIf="value=='1'" class="text-danger">删除</span>
+            <span *ngIf="value=='2'" class="text-info">审核中</span>
+            <span *ngIf="value=='3'" class="text-danger">审核失败</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="店铺类型" key="sellerType" cellClass="slds-truncate">
+        <template nglDatatableCell let-row="row"><b>{{row.sellerType=='1'|threeElementExpression:'烟店;超市'}}</b>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="电话" key="phone"></ngl-datatable-column>
+    <ngl-datatable-column heading="操作" key="" *ngIf="showBtn">
+        <template nglDatatableCell let-row="row">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" (click)="operator(row)">操作</button>
+            </div>
+        </template>
+    </ngl-datatable-column>
+    <!-- No rows overlay -->
+    <template nglNoRowsOverlay>暂无数据!</template>
+</table>
+<!--底部分页-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="sellerList.total" [perPage]="sellerList.size"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+
+<!--审核操作模态-->
+<ngl-modal header="店铺审核" [(open)]="authOpened" size="large">
+    <div body>
+        <seller-combination-component [currentSeller]="currentSeller" [showBtn]="false"></seller-combination-component>
+    </div>
+    <template ngl-modal-footer>
+        <div class="slds-wrap slds-grid">
+            <div class="slds-size--6-of-12">
+                <div class="slds-p-horizontal--small slds-large-size-2-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label slds-float--left" style="line-height: 2rem">审核备注</label>
+                        <div class="slds-form-element__control slds-float--left">
+                            <div class="slds-select_container">
+                                <select class="slds-select" [(ngModel)]="reason">
+                                    <option [value]="'姓名、身份账号、微信号信息无效'">姓名、身份账号、微信号信息无效</option>
+                                    <option [value]="'身份证照片不清晰'">身份证照片不清晰</option>
+                                    <option [value]="'店铺照片不清晰'">店铺照片不清晰</option>
+                                    <option [value]="'店铺不存在'">店铺不存在</option>
+                                    <option [value]="'客服电话为无效'">客服电话为无效</option>
+                                    <option [value]="'店铺营业时间，起送、配送费无效'">店铺营业时间，起送、配送费无效</option>
+                                    <option [value]="'银行卡信息无效'">银行卡信息无效</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--6-of-12">
+                <ngl-form-checkbox label="上架默认商品" class="slds-m-top--small">
+                    <input nglFormControl type="checkbox" [(ngModel)]="defaultGoods" (click)="uncheck($event)"/>
+                </ngl-form-checkbox>
+            </div>
+        </div>
+
+        <button class="slds-button slds-button--destructive" (click)="authSeller('unauth')">审核不通过</button>
+        <button class="slds-button slds-button--brand" (click)="authSeller('auth')">审核通过</button>
+    </template>
+</ngl-modal>
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

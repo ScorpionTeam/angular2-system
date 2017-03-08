@@ -1,0 +1,12 @@
+.slds-size--2-of-12{
+    padding: 10px;
+}
+.slds-size--2-of-12 .widget-thumb-wrap {
+    background: #009688;
+    padding: 20px;
+    color: #fff;
+}
+.wrap-txt{
+    font-weight: bold;
+    font-size: 20px;
+}

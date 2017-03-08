@@ -1,0 +1,116 @@
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <search-component [showIcon]="false" [debounce]="2000"
+                      [placeHolder]="placeholder"
+                      (searchKey)="searchByCondition($event)"></search-component>
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="goodsDataList.rows" trackByKey="rank"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="选择" key="" *ngIf="showCheckBox">
+            <template nglDatatableCell let-row="row">
+                <ngl-form-checkbox style="display: inline-block;">
+                    <input nglFormControl type="checkbox" (click)="selectGoods(row)"/>
+                </ngl-form-checkbox>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="名称" key="title"></ngl-datatable-column>
+        <ngl-datatable-column heading="货号" key="goodsSn"></ngl-datatable-column>
+        <ngl-datatable-column heading="所属类目" key="cname"></ngl-datatable-column>
+        <ngl-datatable-column heading="图片" key="picUrl">
+            <template nglDatatableCell let-value>
+                <img [src]="commonImgUrl+value" style="width: 60px;height: 60px;">
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="协议价" key="recPrice">
+            <template nglDatatableCell let-value>
+                {{value/100|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="售价" key="salePrice">
+            <template nglDatatableCell let-value>
+                {{value/100|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作" key="">
+            <template nglDatatableCell let-row="row">
+                <button class="slds-button slds-button--brand" (click)="edit(row)">编辑</button>
+            </template>
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="goodsDataList.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+<!--秒杀模态-->
+<ngl-modal header="秒杀商品设置" [(open)]="spikeOpen">
+    <div body>
+        <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+            <thead>
+            <tr class="slds-text-title--caps">
+                <th scope="col">
+                    <div class="slds-truncate">店铺id</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">店铺名称</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">商品名称</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">商品零售价</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row" data-label="Opportunity Name">
+                    <div class="slds-truncate" title="Cloudhub">{{currentGoods.id}}</div>
+                </th>
+                <td data-label="Account Name">
+                    <div class="slds-truncate" title="Cloudhub">{{currentGoods.sellerName}}</div>
+                </td>
+                <td data-label="Close Date">
+                    <div class="slds-truncate" title="4/14/2015">{{currentGoods.title}}</div>
+                </td>
+                <td data-label="Prospecting">
+                    <div class="slds-truncate" title="Prospecting">{{currentGoods.salePrice/100|number:'1.2-2'}}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="slds-wrap slds-grid slds-align--absolute-center">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="秒杀价格"  class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="秒杀库存" class="slds-m-top--small">
+                    <input nglFormControl type="number" [required]="required">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="开始时间" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="结束时间" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required">
+                </ngl-form-element>
+            </div>
+        </div>
+
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="cancel()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="saveSpike()">保存</button>
+    </template>
+</ngl-modal>

@@ -1,0 +1,222 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--2-of-12">
+        <start-time-component (_startTime)="receiveDate($event)" [_date_format]="_date_formate"></start-time-component>
+    </div>
+</div>
+<!--卡片列表-->
+<div class="slds-grid slds-wrap">
+    <div class="slds-size--2-of-12">
+        <div class="widget-thumb-wrap">
+            <h4>订单金额</h4>
+            <div class="wrap-thumb">
+                <i class="fa fa-cny fa-2x"></i>
+                <span class="wrap-txt">{{financeCard.order_amount|number:'1.2-2'}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--2-of-12">
+        <div class="widget-thumb-wrap">
+            <h4>红包金额</h4>
+            <div class="wrap-thumb">
+                <i class="fa fa-cny fa-2x"></i>
+                <span class="wrap-txt">{{financeCard.red_amount|number:'1.2-2'}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--2-of-12">
+        <div class="widget-thumb-wrap">
+            <h4>支付总金额</h4>
+            <div class="wrap-thumb">
+                <i class="fa fa-cny fa-2x"></i>
+                <span class="wrap-txt">{{financeCard.seller_amount|number:'1.2-2'}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--2-of-12">
+        <div class="widget-thumb-wrap">
+            <h4>店铺订单支付</h4>
+            <div class="wrap-thumb">
+                <i class="fa fa-cny fa-2x"></i>
+                <span class="wrap-txt">{{financeCard.auto_income|number:'1.2-2'}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--2-of-12">
+        <div class="widget-thumb-wrap">
+            <h4>奖励支付金额</h4>
+            <div class="wrap-thumb">
+                <i class="fa fa-cny fa-2x"></i>
+                <span class="wrap-txt">{{financeCard.reward|number:'1.2-2'}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="slds-size--2-of-12">
+        <div class="widget-thumb-wrap">
+            <h4>其它支付金额</h4>
+            <div class="wrap-thumb">
+                <i class="fa fa-cny fa-2x"></i>
+                <span class="wrap-txt">{{financeCard.punish+financeCard.offset|number:'1.2-2'}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--数据列表-->
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="financeList.rows"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="日期" key="date">
+            <template nglDatatableCell let-value>
+                <b>
+                    {{value}}
+                </b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="订单金额" key="order_amount">
+            <template nglDatatableCell let-value>
+            <span class="text-info">
+                {{value|number:'1.2-2'}}
+            </span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="红包金额" key="red_amount">
+            <template nglDataCell let-value>
+            <span class="text-danger">
+                {{value|number:'1.2-2'}}
+            </span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="支付总金额" key="seller_amount">
+            <template nglDatatable let-value>
+                {{value|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="店铺订单支付" key="auto_income">
+            <template nglDatatableCell let-value>
+                {{value|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="奖励支付金额" key="reward">
+            <template nglDatatableCell let-value>
+                {{value|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="惩罚金额" key="punish">
+            <template nglDatatableCell let-value>
+                {{value|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="调整金额" key="offset">
+            <template nglDatatableCell let-value>
+                {{value|number:'1.2-2'}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="操作" key="操作">
+            <template nglDatatableCell let-row="row">
+                <div class="slds-button-group" role="group">
+                    <button class="slds-button slds-button--brand"
+                            (click)="incomeDetail(row.date);incomeOpen = !incomeOpen;">收入详情
+                    </button>
+                    <button class="slds-button slds-button--destructive"
+                            (click)="expenditureDetail(row.date);expenditureOpen = !expenditureOpen;">支出详情
+                    </button>
+                </div>
+            </template>
+        </ngl-datatable-column>
+        <!-- No rows overlay -->
+        <template nglNoRowsOverlay>暂无数据</template>
+    </table>
+</div>
+<!--底部分页-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="financeList.total" [perPage]="financeList.size"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+<!--收入详情模态-->
+<ngl-modal header="收入详情" [(open)]="incomeOpen">
+    <div body>
+        <table ngl-datatable [data]="incomeList.rows" trackByKey="rank"
+               class="slds-max-medium-table--stacked-horizontal">
+            <ngl-datatable-column heading="订单ID" key="id"></ngl-datatable-column>
+            <ngl-datatable-column heading="订单号" key="order_sn"></ngl-datatable-column>
+            <ngl-datatable-column heading="收货人" key="consignee"></ngl-datatable-column>
+            <ngl-datatable-column heading="手机号" key="mobile"></ngl-datatable-column>
+            <ngl-datatable-column heading="订单金额" key="order_amount">
+                <template nglDatatableCell let-value>
+                    {{value|number:'1.2-2'}}
+                </template>
+            </ngl-datatable-column>
+            <ngl-datatable-column heading="红包金额" key="price">
+                <template nglDatatableCell let-value>
+                    {{value|number:'1.2-2'}}
+                </template>
+            </ngl-datatable-column>
+            <!-- No rows overlay -->
+            <template nglNoRowsOverlay>暂无数据</template>
+        </table>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <ngl-pagination [(page)]="incomePageOpts.page" [total]="incomeList.total" [perPage]="incomePageOpts.perPage"
+                            [limit]="incomePageOpts.limit"
+                            boundaryNumbers="1" #pagination (pageChange)="incomePageChange($event)" previousText="上一页"
+                            nextText="下一页"></ngl-pagination>
+        </div>
+    </div>
+</ngl-modal>
+
+<!--支出详情模态-->
+<ngl-modal header="支出详情" [(open)]="expenditureOpen">
+    <div body>
+        <table ngl-datatable [data]="financeList.rows" trackByKey="rank"
+               class="slds-max-medium-table--stacked-horizontal">
+            <ngl-datatable-column heading="订单ID" key="date"></ngl-datatable-column>
+            <ngl-datatable-column heading="订单号" key="order_amount">
+                <template nglDatatableCell let-value>
+                    <h4 class="text-danger">
+                        {{value|number:'1.2-2'}}
+                    </h4>
+                </template>
+            </ngl-datatable-column>
+            <ngl-datatable-column heading="收货人" key="red_amount">
+                <template nglDataCell let-value>
+                    {{value|number:'1.2-2'}}
+                </template>
+            </ngl-datatable-column>
+            <ngl-datatable-column heading="手机号" key="seller_amount">
+                <template nglDatatable let-value>
+                    {{value|number:'1.2-2'}}
+                </template>
+            </ngl-datatable-column>
+            <ngl-datatable-column heading="订单金额" key="auto_income">
+                <template nglDatatableCell let-value>
+                    <b>
+                        {{value|number:'1.2-2'}}
+                    </b>
+                </template>
+            </ngl-datatable-column>
+            <ngl-datatable-column heading="红包金额" key="reward">
+                <template nglDatatableCell let-value>
+                    <span class="text-danger">
+                                            {{value|number:'1.2-2'}}
+                    </span>
+
+                </template>
+            </ngl-datatable-column>
+            <!-- No rows overlay -->
+            <template nglNoRowsOverlay>暂无数据</template>
+        </table>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <ngl-pagination [(page)]="expenditurePageOpts.page" [total]="financeList.total"
+                            [perPage]="expenditurePageOpts.perPage"
+                            [limit]="expenditurePageOpts.limit"
+                            boundaryNumbers="1" #pagination (pageChange)="expenditurePageChange($event)"
+                            previousText="上一页"
+                            nextText="下一页"></ngl-pagination>
+        </div>
+    </div>
+</ngl-modal>
+
+<!--Toast提示-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

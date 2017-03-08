@@ -1,0 +1,190 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--4-of-12">
+        <search-component [showIcon]="false" [debounce]="2000"
+                          [placeHolder]="placeholder"
+                          (searchKey)="searchByCondition($event)"></search-component>
+    </div>
+    <div class="slds-size--2-of-12">
+        <button type="button" nglButton="neutral" (click)="create()">新增</button>
+    </div>
+</div>
+<!--数据列表-->
+<table ngl-datatable [data]="jdbList.rows"
+       class="slds-max-medium-table--stacked-horizontal">
+    <ngl-datatable-column heading="ID" key="id"></ngl-datatable-column>
+    <ngl-datatable-column heading="名称" key="jobName">
+        <template nglDatatableCell let-value>
+            <b>{{value}}</b>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="状态" key="status">
+        <template nglDatatableCell let-value>
+            <span *ngIf="value=='0'" class="text-info">有效</span>
+            <span *ngIf="value=='1'" class="text-danger">已失效</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="创建时间" key="createTime">
+        <template nglDatatableCell let-value>
+            <span>{{value}}</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="更新时间" key="updateTime">
+        <template nglDatatableCell let-value>
+            <span>{{value}}</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="操作" key="">
+        <template nglDatatableCell let-row="row">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" (click)="jobDetail(row)">详情</button>
+                <button class="slds-button slds-button--brand" (click)="editFun(row)">编辑</button>
+                <button class="slds-button slds-button--destructive" (click)="deleteFunc(row)">删除</button>
+            </div>
+        </template>
+    </ngl-datatable-column>
+    <template nglNoRowsOverlay>暂无数据!</template>
+</table>
+<!--分页-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="jdbList.total" [perPage]="jdbList.size"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>
+
+<!--详情模态-->
+<ngl-modal header="岗位详情" [(open)]="jobDetaiOpen">
+    <div body>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label"><b>岗位名称</b></span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.jobName}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label"><b>岗位状态</b></span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.status=='0'|threeElementExpression:'有效;已失效'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label"><b>创建时间</b></span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.createTime}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label"><b>更新时间</b></span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <span class="slds-form-element__static text-success">{{operaObj.updateTime}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label"><b>岗位职责</b></span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <div class="slds-form-element__static slds-text-longform">
+                            <p class="text-success">{{operaObj.jobDuty}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label"><b>岗位技能</b></span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <div class="slds-form-element__static slds-text-longform">
+                            <p class="text-success">{{operaObj.jobSkill}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <div class="slds-form-element">
+                    <span class="slds-form-element__label">岗位描述</span>
+                    <div class="slds-form-element__control slds-has-divider--bottom">
+                        <div class="slds-form-element__static slds-text-longform">
+                            <p class="text-success">{{operaObj.jobDescription}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ngl-modal>
+
+<!--编辑新增模态-->
+<ngl-modal header="岗位" [(open)]="insertOrEditOpen">
+    <div body>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="岗位名称" class="slds-m-top--small">
+                    <input nglFormControl type="text" [required]="required" [(ngModel)]="operaObj.jobName">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="岗位状态" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="operaObj.status">
+                        <option [value]="0">有效</option>
+                        <option [value]="1">已失效</option>
+                    </select>
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <ngl-form-element class="slds-m-top--small">
+                    <template nglFormLabel>岗位职责</template>
+                    <textarea nglFormControl [required]="required" [(ngModel)]="operaObj.jobDuty"></textarea>
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <ngl-form-element class="slds-m-top--small">
+                    <template nglFormLabel>岗位技能</template>
+                    <textarea nglFormControl [required]="required" [(ngModel)]="operaObj.jobSkill"></textarea>
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <ngl-form-element class="slds-m-top--small">
+                    <template nglFormLabel>岗位描述</template>
+                    <textarea nglFormControl [required]="required" [(ngModel)]="operaObj.jobDescription"></textarea>
+                </ngl-form-element>
+            </div>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="save()">保存</button>
+    </template>
+</ngl-modal>

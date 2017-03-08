@@ -1,0 +1,62 @@
+<div class="slds-button-group" role="group">
+    <button class="slds-button slds-button--neutral" (click)="showCase('showcase')">推荐</button>
+    <button class="slds-button slds-button--neutral" (click)="showCase('cancelShowcase')">取消推荐</button>
+    <button class="slds-button slds-button--neutral" (click)="showCase('up')">上架</button>
+    <button class="slds-button slds-button--neutral" (click)="showCase('down')">下架</button>
+    <button class="slds-button slds-button--neutral" (click)="showCase('credit')">赊销</button>
+    <button class="slds-button slds-button--neutral" (click)="showCase('cancelcredit')">取消赊销</button>
+</div>
+<search-component [showIcon]="false" [debounce]="2000" placeHolder="名称..."
+                  (searchKey)="searchByCondition($event)"></search-component>
+<table ngl-datatable [data]="goodsData.rows" trackByKey="id"
+       class="slds-max-medium-table--stacked-horizontal">
+    <ngl-datatable-column heading="选择" key="">
+        <template nglDatatableCell let-row="row">
+            <ngl-form-checkbox style="display: inline-block;">
+                <input nglFormControl type="checkbox" (click)="emitMethod(row.id)"/>
+            </ngl-form-checkbox>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="id" key="id"></ngl-datatable-column>
+    <ngl-datatable-column heaidng="名称" key="title"></ngl-datatable-column>
+    <ngl-datatable-column heading="上下架" key="goodsStatus">
+        <template nglDatatableCell let-value>
+            <ngl-badge type="success" *ngIf="value=='0'">上架</ngl-badge>
+            <ngl-badge type="error" *ngIf="value=='1'">下架</ngl-badge>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="推荐" key="hasShowcase">
+        <template nglDatatableCell let-value>
+            <ngl-badge type="success" *ngIf="value=='1'">推荐中</ngl-badge>
+            <ngl-badge type="error" *ngIf="value=='0'||value==null">未推荐</ngl-badge>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="赊销" key="credit">
+        <template nglDatatableCell let-value>
+            <ngl-badge type="success" *ngIf="value=='1'">是</ngl-badge>
+            <ngl-badge type="error" *ngIf="value=='0'">否</ngl-badge>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="销售价" key="salePrice">
+        <template nglDatatableCell let-value>
+            {{value/100|number:'1.2-2'}}
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="协议价" key="recPrice">
+        <template nglDatatableCell let-value>
+            {{value/100|number:'1.2-2'}}
+        </template>
+    </ngl-datatable-column>
+</table>
+<!--底部分页-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="goodsData.total" [perPage]="pageOpts.size"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType"
+                 [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

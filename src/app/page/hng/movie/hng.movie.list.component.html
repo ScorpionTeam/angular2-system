@@ -1,0 +1,168 @@
+<div class="slds-grid slds-wrap">
+    <div class="slds-size--4-of-12">
+        <!--活动数据列表-->
+        <table ngl-datatable [data]="activityData.rows"
+               class="slds-max-medium-table--stacked-horizontal">
+            <ngl-datatable-column heading="活动店铺" key="sellerName">
+                <template nglDatatableCell let-value>
+                    <b>{{value}}</b>
+                </template>
+            </ngl-datatable-column>
+            <ngl-datatable-column heading="操作" key="">
+                <template nglDatatableCell let-row="row">
+                    <div class="slds-button-group" role="group">
+                        <button class="slds-button slds-button--neutral" (click)="detail(row)">详情</button>
+                        <button class="slds-button slds-button--brand" (click)="editActive(row)">编辑</button>
+                        <button class="slds-button slds-button--destructive" (click)="delClick(row)">删除</button>
+                    </div>
+                </template>
+            </ngl-datatable-column>
+            <template nglNoRowsOverlay>暂无数据!</template>
+        </table>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <ngl-pagination [(page)]="pageOpts.page" [total]="activityData.total" [perPage]="pageOpts.perPage"
+                            [limit]="pageOpts.limit"
+                            boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                            nextText="下一页"></ngl-pagination>
+        </div>
+    </div>
+    <div class="slds-size--1-of-12"></div>
+    <div class="slds-size--7-of-12">
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <button class="slds-button slds-button--neutral" (click)="exportDataReport()">Excel导出</button>
+            <button class="slds-button slds-button--neutral" (click)="importDataReport(fileInput)">Excel导入</button>
+        </div>
+        <div class="slds-scrollable">
+            <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+                <thead>
+                <tr class="slds-text-title--caps">
+                    <th scope="col">
+                        <div class="slds-truncate">活动时间</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate">活动地点</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate">商家</div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td data-label="Close Date">
+                        <div class="slds-truncate text-danger">{{activity.time}}</div>
+                    </td>
+                    <td data-label="Prospecting">
+                        <div class="slds-truncate text-success">{{activity.address}}</div>
+                    </td>
+                    <td data-label="Confidence">
+                        <div class="slds-truncate"><b>{{activity.sellerName}}</b></div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            电影列表
+        </div>
+        <div class="slds-scrollable">
+            <table ngl-datatable [data]="movieDataList" trackByKey="rank"
+                   class="slds-max-medium-table--stacked-horizontal">
+                <ngl-datatable-column heading="海报" key="url">
+                    <template nglDatatableCell let-value>
+                        <img src="{{commonImgUrl}}{{value}}" style="height: 60px;width: 80px;">
+                    </template>
+                </ngl-datatable-column>
+                <ngl-datatable-column heading="名称" key="name"></ngl-datatable-column>
+                <ngl-datatable-column heading="导演" key="director"></ngl-datatable-column>
+                <ngl-datatable-column heading="演员" key="actor"></ngl-datatable-column>
+                <ngl-datatable-column heading="类型" key="type"></ngl-datatable-column>
+                <ngl-datatable-column heading="统计" key="">
+                    <template nglDatatableCell let-row="row">
+                        <div class="slds-button-group" role="group">
+                            <button class="slds-button slds-button--neutral" (click)="vote(row)">观看人数</button>
+                        </div>
+                    </template>
+                </ngl-datatable-column>
+                <template nglNoRowsOverlay>暂无数据!</template>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen"
+                          (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType"
+                 [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>
+
+
+<!--观看人数统计模态-->
+<ngl-modal header="统计信息" [(open)]="statisticalOpened" size="large">
+    <div body class="slds-scrollable">
+        <table class="slds-table slds-table--bordered slds-table--cell-buffer">
+            <thead>
+            <tr class="slds-text-title--caps">
+                <th scope="col">
+                    <div class="slds-truncate">活动时间</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">活动地址</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">商户</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">影片名称</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">投票时间</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">投票人</div>
+                </th>
+                <th scope="col">
+                    <div class="slds-truncate">手机号</div>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let vote of voteDataList.rows">
+                <th scope="row" data-label="Opportunity Name">
+                    <div class="slds-truncate"><b>{{vote.movieSeller.time}}</b></div>
+                </th>
+                <td data-label="Account Name">
+                    <div class="slds-truncate">{{vote.movieSeller.address}}</div>
+                </td>
+                <td data-label="Close Date">
+                    <div class="slds-truncate">{{vote.movieSeller.sellerName}}</div>
+                </td>
+                <td data-label="Prospecting">
+                    <div class="slds-truncate text-danger">{{vote.movie.name}}</div>
+                </td>
+                <td data-label="Confidence">
+                    <div class="slds-truncate">{{vote.voteTime}}</div>
+                </td>
+                <td data-label="Confidence">
+                    <div class="slds-truncate">{{vote.name}}</div>
+                </td>
+                <td data-label="Confidence">
+                    <div class="slds-truncate text-success">{{vote.mobile}}</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+            <ngl-pagination [(page)]="votePageOpts.page" [total]="voteDataList.total" [perPage]="votePageOpts.perPage"
+                            [limit]="votePageOpts.limit"
+                            boundaryNumbers="1" #pagination (pageChange)="votePageChange($event)" previousText="上一页"
+                            nextText="下一页"></ngl-pagination>
+        </div>
+    </div>
+</ngl-modal>
+
+<!--上传触发Input-->
+<input type="file" #fileInput (change)="addQueue(fileInput)" hidden>

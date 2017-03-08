@@ -1,0 +1,23 @@
+<div class="slds-size--1-of-2 slds-align--absolute-center">
+  <div class="slds-size--1-of-1">
+    <ngl-form-element label="公司名称" class="slds-m-top--small">
+      <input type="text" nglFormControl required [(ngModel)]="companyInfo.companyName">
+    </ngl-form-element>
+    <ngl-form-element label="联系人" clsss="slds-m-top--small">
+      <input type="text" nglFormControl required [(ngModel)]="companyInfo.contacts">
+    </ngl-form-element>
+    <ngl-form-element label="联系电话" class="slds-m-top--small">
+      <input type="tel" nglFormControl required [(ngModel)]="companyInfo.contactsPhone">
+    </ngl-form-element>
+    <ngl-form-element label="营业执照" class="slds-m-top--small">
+      <input type="text" nglFormControl required style="display:none">
+      <div class="slds-size--1-of-2">
+        <img-upload-component></img-upload-component>
+      </div>
+    </ngl-form-element>
+    <div class="slds-card__footer" *ngIf="noBtn">
+      <button class="slds-button slds-button--brand" (click)="addCompany();"><i class="fa fa-floppy-o" aria-hidden="true"></i>
+        &nbsp;确&nbsp;&nbsp;定</button>
+    </div>
+  </div>
+</div>

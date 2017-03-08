@@ -1,0 +1,55 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-wrap slds-grid">
+        <div class="slds-size--1-of-1">
+            <search-component [showIcon]="false" [debounce]="2000"
+                              [placeHolder]="placeholder"
+                              (searchKey)="searchByCondition($event)"></search-component>
+        </div>
+    </div>
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="sqlDataList.rows" trackByKey="rank"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="ID" key="id"></ngl-datatable-column>
+        <ngl-datatable-column heading="分组键" key="groupKey"></ngl-datatable-column>
+        <ngl-datatable-column heading="分组名称" key="groupName">
+            <template nglDatatableCell let-value>
+                <span class="text-success">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="SQL键" key="sqlKey">
+            <template nglDatatableCell let-value>
+                {{value|json}}
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="SQL名称" key="sqlName">
+            <template nglDatatableCell let-value>
+                <span class="text-danger">{{value}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="SQL文本" key="sqlText">
+            <template nglDatatableCell let-value>
+                <ngl-form-element class="slds-m-top--small">
+                    <textarea nglFormControl [required]="required">{{value}}</textarea>
+                </ngl-form-element>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="是否有效" key="isDelete">
+            <template nglDatatableCell let-value>
+                <span *ngIf="value=='0'" class="text-success">有效</span>
+                <span *ngIf="value=='1'" class="text-danger">无效</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="默认参数" key="param"></ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+    <div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+        <ngl-pagination [(page)]="pageOpts.page" [total]="sqlDataList.total"
+                        [perPage]="pageOpts.perPage"
+                        [limit]="pageOpts.limit"
+                        boundaryNumbers="1" #pagination (pageChange)="pageChange($event)"
+                        previousText="上一页"
+                        nextText="下一页"></ngl-pagination>
+    </div>
+</div>

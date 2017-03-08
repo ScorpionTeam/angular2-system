@@ -1,0 +1,137 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <div class="slds-size--3-of-12">
+        <search-component [showIcon]="false" [debounce]="2000"
+                          [placeHolder]="placeholder"
+                          (searchKey)="searchByCondition($event)"></search-component>
+    </div>
+    <div class="slds-size--2-of-12">
+        <button class="slds-button slds-button--neutral" (click)="openModal()">创建</button>
+    </div>
+</div>
+<!--用户列表-->
+<table ngl-datatable [data]="userList.rows" trackByKey="rank"
+       class="slds-max-medium-table--stacked-horizontal">
+    <ngl-datatable-column heading="ID" key="id" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="姓名" key="name" cellClass="slds-truncate">
+        <template nglDatatableCell let-value>
+            <b>{{value}}</b>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="账号" key="account" cellClass="slds-truncate">
+        <template nglDatatableCell let-value>
+            <span class="text-success">{{value}}</span>
+        </template>
+    </ngl-datatable-column>
+    <ngl-datatable-column heading="手机" key="mobile" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="邮箱" key="email" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="性别" key="sex" cellClass="slds-truncate"></ngl-datatable-column>
+    <ngl-datatable-column heading="操作" key="">
+        <template nglDatatableCell let-row="row">
+            <div class="slds-button-group" role="group">
+                <button class="slds-button slds-button--neutral" (click)="reset(row)">密码重置</button>
+                <button class="slds-button slds-button--brand" (click)="edit(row)">编辑</button>
+                <button class="slds-button slds-button--destructive" (click)="deleteUser(row)">删除</button>
+            </div>
+        </template>
+    </ngl-datatable-column>
+    <!-- No rows overlay -->
+    <template nglNoRowsOverlay>暂无数据!</template>
+</table>
+
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="userList.total" [perPage]="pageOpts.perPage"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
+<!--用户新增模态-->
+<ngl-modal header="新增用户" [(open)]="opened" class=“small-modal”>
+    <div body>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="账号" class="slds-m-top--small">
+                    <input nglFormControl type="text" placeholder="" [required]="required"
+                           [(ngModel)]="operaObj.account">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="密码" class="slds-m-top--small">
+                    <input nglFormControl type="password" placeholder="" [required]="required"
+                           [(ngModel)]="operaObj.password">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="性别" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="operaObj.sex">
+                        <option [value]="'男'">男</option>
+                        <option [value]="'女'">女</option>
+                    </select>
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="角色" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="operaObj.roleId">
+                        <option *ngFor="let r of roleDataList" [value]="r.id">{{r.roleName}}</option>
+                    </select>
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="姓名" class="slds-m-top--small">
+                    <input nglFormControl type="text" placeholder="" [required]="required" [(ngModel)]="operaObj.name">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="年龄" class="slds-m-top--small">
+                    <input nglFormControl type="text" placeholder="" [required]="required" [(ngModel)]="operaObj.age">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="手机号码" class="slds-m-top--small">
+                    <input nglFormControl type="text" placeholder="" [required]="required"
+                           [(ngModel)]="operaObj.mobile">
+                </ngl-form-element>
+            </div>
+            <div class="slds-size--2-of-12"></div>
+            <div class="slds-size--5-of-12">
+                <ngl-form-element label="是否有效" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [required]="required" [(ngModel)]="operaObj.state">
+                        <option [value]="0">有效</option>
+                        <option [value]="1">无效</option>
+                        <option [value]="2">离职</option>
+                        <option [value]="3">商户端注册</option>
+                    </select>
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-size--1-of-1">
+                <ngl-form-element label="身份证" class="slds-m-top--small">
+                    <input nglFormControl type="text" placeholder="" [(ngModel)]="operaObj.cardno">
+                </ngl-form-element>
+            </div>
+        </div>
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="cancel()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="saveUser()">保存</button>
+    </template>
+</ngl-modal>
+
+
+<!--prompt-->
+<confirm-prompt-component [promptMessage]="prompt.promptMessage" [isOpen]="prompt.notificationOpen" (cancelFunction)="cancelPrompt()"
+                          (confirmFunction)="confirm()"></confirm-prompt-component>
+<!--Toast-->
+<toast-component (notifyParam)="notifyParamFunction($event)" [toastType]="toast.toastType" [toastMessage]="toast.toastMessage"
+                 [showAlert]="toast.showAlert"></toast-component>

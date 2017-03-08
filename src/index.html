@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/4.0.0-alpha.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" >
+  <link rel="stylesheet" href="//cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+  <link rel="stylesheet" href="//ng-lightning.github.io/ng-lightning/assets/styles/salesforce-lightning-design-system.min.css">
+  <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=FYDTSm1Z0ZPAm3ysgVETc9B4HLE3zPq7&s=1"></script>
+  <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=zHNmFc3z0ho52KdH0cH9mDF5LRiulbx6&s=1"></script>
+  <!-- 加载百度地图样式信息窗口 -->
+  <script type="text/javascript" src="//api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+  <link rel="stylesheet" href="//api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+  <!-- 加载城市列表 -->
+  <script type="text/javascript" src="//api.map.baidu.com/library/CityList/1.2/src/CityList_min.js"></script>
+  <title><%= htmlWebpackPlugin.options.title %></title>
+
+  <meta name="description" content="<%= htmlWebpackPlugin.options.title %>">
+
+  <% if (webpackConfig.htmlElements.headTags) { %>
+  <!-- Configured Head Tags  -->
+  <%= webpackConfig.htmlElements.headTags %>
+  <% } %>
+
+  <!-- base url -->
+  <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
+</head>
+<body>
+  <app>
+    <div class="jumbotron jumbotron-fluid bg-primary">
+      <div class="container">
+        <h1 class="display-3">Angular2-manager-system</h1>
+      </div>
+    </div>
+  </app>
+  <!--开发者模式-->
+  <% if (htmlWebpackPlugin.options.metadata.isDevServer && htmlWebpackPlugin.options.metadata.HMR !== true) { %>
+  <!-- Webpack Dev Server reload -->
+  <script src="/webpack-dev-server.js"></script>
+  <% } %>
+</body>
+</html>

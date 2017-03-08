@@ -1,0 +1,114 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <b>App版本管理</b>
+</div>
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="appVersionList.rows" class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="应用版本号" key="version">
+            <template nglDatatableCell let-value>
+                <ngl-badge type="inverse" class="slds-m-horizontal--large">{{value}}</ngl-badge>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="版本号" key="sortOrder"></ngl-datatable-column>
+        <ngl-datatable-column heading="终端类型" key="appType">
+            <template nglDatatableCell let-value>
+                <span>{{value=='0'|threeElementExpression:'IOS;Android'}}</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="应用名称" key="appName">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="是否可以升级" key="flag">
+            <template nglDatatableCell let-value>
+                <span class="text-success" *ngIf="value=='0'">无需升级</span>
+                <span class="text-info" *ngIf="value=='1'">可以升级</span>
+                <span class="text-danger" *ngIf="value=='2'">必须升级</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="文件大小" key="size"></ngl-datatable-column>
+        <ngl-datatable-column heading="操作" key="">
+            <template nglDatatableCell let-row="row">
+                <button class="slds-button slds-button--small slds-button--brand slds-button" (click)="open(row)">编辑
+                </button>
+            </template>
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+<!--底部分页-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="appVersionList.total" [perPage]="appVersionList.size"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+<!--app模态-->
+<ngl-modal header="app版本管理" [(open)]="opened">
+    <div body>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="slds-form-element slds-align--absolute-center">
+                    <div class="slds-form-element__control">
+                        <i *ngIf="appObj.appType=='0'" class="fa fa-apple fa-4x" style="color: #0275d8;"></i>
+                        <i *ngIf="appObj.appType=='1'" class="fa fa-android fa-4x" style="color: #0275d8;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <ngl-form-element label="应用名称" class="slds-m-top--small">
+                    <input nglFormControl type="text" [(ngModel)]="appObj.appName">
+                </ngl-form-element>
+            </div>
+            <div class="col-md-6">
+                <ngl-form-element label="应用版本号" class="slds-m-top--small">
+                    <input nglFormControl type="text" [(ngModel)]="appObj.version">
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <ngl-form-element label="版本号" class="slds-m-top--small">
+                    <input nglFormControl type="text" [(ngModel)]="appObj.sortOrder">
+                </ngl-form-element>
+            </div>
+            <div class="col-md-6">
+                <ngl-form-element label="是否可以升级" class="slds-m-top--small">
+                    <select nglFormControl class="slds-select" [(ngModel)]="appObj.flag">
+                        <option [value]="0">无需升级</option>
+                        <option [value]="1">可以升级</option>
+                        <option [value]="2">必须升级</option>
+                    </select>
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ngl-form-element class="slds-m-top--small">
+                    <template nglFormLabel><i>版本描述</i></template>
+                    <textarea nglFormControl [(ngModel)]="appObj.verDesc"></textarea>
+                </ngl-form-element>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <ngl-form-element label="下载地址" class="slds-m-top--small">
+                    <input nglFormControl type="text" [(ngModel)]="appObj.url">
+                </ngl-form-element>
+            </div>
+
+        </div>
+
+    </div>
+    <template ngl-modal-footer>
+        <button class="slds-button slds-button--neutral" (click)="cancel()">取消</button>
+        <button class="slds-button slds-button--brand" (click)="saveAppVersion()">保存</button>
+    </template>
+</ngl-modal>
+
+
+<!--Toast-->
+<toast-component [showAlert]="toast.showAlert" [toastMessage]="toast.toastMessage" [toastType]="toast.toastType"></toast-component>

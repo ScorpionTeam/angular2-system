@@ -1,0 +1,47 @@
+<!--头部信息-->
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <search-component [debounce]="2000" [showIcon]="false" [placeHolder]="placeholder"
+                      (searchKey)="searchByCondition($event)"></search-component>
+</div>
+<!--短信列表-->
+<div class="slds-scrollable">
+    <table ngl-datatable [data]="messageList.rows" trackByKey="rank"
+           class="slds-max-medium-table--stacked-horizontal">
+        <ngl-datatable-column heading="手机号" key="phone">
+            <template nglDatatableCell let-value>
+                <b>{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="短信类型" key="type">
+            <template nglDatatableCell let-value>
+                <span *ngIf="value=='1'">用户端</span>
+                <span *ngIf="value=='2'">采购端</span>
+                <span *ngIf="value=='3'">配送端</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="创建时间" key="gmtCreate"></ngl-datatable-column>
+        <ngl-datatable-column heading="发送状态" key="smsStatus">
+            <template nglDatatableCell let-value>
+                <span *ngIf="value=='0'" class="text-warning">未验证</span>
+                <span *ngIf="value=='1'" class="text-success">已验证</span>
+                <span *ngIf="value=='2'" class="text-danger">过期重发</span>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="错误编码" key="errorcode">
+            <template nglDatatableCell let-value>
+                <b class="text-danger">{{value}}</b>
+            </template>
+        </ngl-datatable-column>
+        <ngl-datatable-column heading="错误信息" key="errormessage"></ngl-datatable-column>
+        <ngl-datatable-column heading="创建时间" key="gmtCreate">
+        </ngl-datatable-column>
+        <template nglNoRowsOverlay>暂无数据!</template>
+    </table>
+</div>
+<div class="slds-p-vertical--x-small slds-grid slds-p-horizontal--large slds-shrink-none slds-theme--shade">
+    <ngl-pagination [(page)]="pageOpts.page" [total]="messageList.total" [perPage]="messageList.size"
+                    [limit]="pageOpts.limit"
+                    boundaryNumbers="1" #pagination (pageChange)="pageChange($event)" previousText="上一页"
+                    nextText="下一页"></ngl-pagination>
+</div>
+
