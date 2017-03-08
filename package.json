@@ -8,7 +8,7 @@
     "typescript"
   ],
   "author": "Kunlun<wangbinbin8907@gmail.com>",
-  "homepage": "https://github.com/Jarvens/huala-system",
+  "homepage": "https://github.com/ScorpionTeam/angular2-system",
   "license": "MIT",
   "scripts": {
     "build:aot:prod": "npm run clean:dist && npm run clean:aot && webpack --config config/webpack.prod.js  --progress --profile --bail",
