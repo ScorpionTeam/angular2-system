@@ -2,15 +2,14 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
   <ul class="nav sidebar-nav">
     <li class="sidebar-brand">花啦</li>
-    <li class="dropdown" *ngFor="let menu of menuList" [ngClass]="{open: menu.id === currentMenuId}">
-      <a class="dropdown-toggle" (click)="openMenuChild(menu)">
-        {{menu.name}}
-        <span class="caret" *ngIf="menu.leaf && menu.leaf.length > 0"></span>
+    <li class="dropdown open">
+      <a class="dropdown-toggle" (click)="openMenuChild(menu)">系统管理
+        <span class="caret"></span>
       </a>
-      <ul role="menu" class="dropdown-menu" *ngIf="menu.leaf && menu.leaf.length > 0">
-        <li class="dropdown-header">{{menu.name}}</li>
-        <li *ngFor="let child of menu.leaf">
-          <a href="javascript:void(0);" [routerLink]="'/index/'+child.component">{{child.name}}</a>
+      <ul role="menu" class="dropdown-menu">
+        <li class="dropdown-header">系统管理</li>
+        <li>
+          <a href="javascript:void(0);" [routerLink]="'/index/user-manager'">用户管理</a>
         </li>
       </ul>
     </li>

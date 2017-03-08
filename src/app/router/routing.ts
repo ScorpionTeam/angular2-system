@@ -52,7 +52,7 @@ const routes: Routes = [
       {path: 'system-img-manage', component: PictureComponent},
       {path: 'app/app-version-index', component: AppVersionComponent},
       {path: 'order', component: OrderComponent},
-      {path: 'system-user-manage', component: UserComponent},
+      {path: 'user-manager', component: UserComponent},
       {path: 'system-sms', component: MessageComponent},
       {path: 'balance-list', component: BalanceComponent},
       {path: 'goods-entry', component: GoodsComponent},
